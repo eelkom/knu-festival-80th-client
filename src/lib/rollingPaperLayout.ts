@@ -86,7 +86,7 @@ export const ROLLING_PAPER_PREVIEW_VIEWPORT = {
 export const ROLLING_PAPER_FRAME_DIMENSIONS = {
   width: 320,
   height: 320,
-  blockedPadding: 26,
+  blockedPadding: 0,
 } as const;
 
 export const ROLLING_PAPER_NOTE_WIDTH = 80;
