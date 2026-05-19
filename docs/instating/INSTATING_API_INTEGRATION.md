@@ -35,22 +35,28 @@ getApplicantsCount(); // 성별별 신청자 수 조회
 
 ### 운영 상태 흐름
 
-백엔드의 `MatchingUserStatusResponse`에서 `registrationOpen`, `resultOpen` 두 플래그로 현재 단계를 구분한다.
+백엔드의 `MatchingUserStatusResponse`에서 `registrationOpen`, `resultOpen` 두 플래그와 시간 필드로 현재 단계를 구분한다.
 
 ```
-신청 전         registrationOpen: false, resultOpen: false, resultOpenAt: null
-신청 중         registrationOpen: true,  resultOpen: false, registrationDeadline: 있음
-결과 공개 전    registrationOpen: false, resultOpen: false, resultOpenAt: 있음
-결과 공개 후    registrationOpen: false, resultOpen: true
+축제 시작 전     now < festivalDays[0] T11:00
+신청 중          registrationOpen: true,  registrationDeadline: 있음
+매칭 대기 중     registrationOpen: false, resultOpen: false, resultOpenAt > now
+다음 날 신청 전  resultOpen: true  OR  registrationOpenAt > now
+축제 종료        모든 날짜 경과
 ```
 
-`CountDownSection`은 이 플래그 조합에 따라 카운트다운 라벨과 목표 시간을 결정한다.
+`CountDownSection`은 이 상태에 따라 카운트다운 라벨과 목표 시간을 결정한다.
 
 ```ts
-if (registrationOpen && registrationDeadline)       → '인스타팅 신청 마감까지'
-if (!registrationOpen && !resultOpen && resultOpenAt) → '인스타팅 매칭 공개까지'
-else                                                 → '결과를 확인하세요.'
+now < festivalDays[0] T11:00               → '인스타팅 서비스 오픈까지'  (deadline: firstFestivalStart)
+registrationOpen && registrationDeadline   → '인스타팅 신청 마감까지'    (deadline: registrationDeadline)
+!registrationOpen && !resultOpen
+  && resultOpenAt > now                    → '인스타팅 매칭 공개까지'    (deadline: resultOpenAt)
+registrationOpenAt > now                   → '인스타팅 신청 오픈까지'    (deadline: registrationOpenAt)
+else                                       → '인스타팅 서비스가 종료되었습니다.'
 ```
+
+`festivalDays`와 `registrationOpenAt`은 `MatchingUserStatusResponse`에 포함되며, 타입 정의에도 반영되어 있다.
 
 ### 데이터 페칭 전략
 

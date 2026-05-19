@@ -26,9 +26,6 @@ const ApplicantCard = ({ label, count, countColor, bgColor }: ApplicantCardProps
 const ApplicantsNumberSection = () => {
   const { data, isError, refetch } = useMatchingStatus();
 
-  // TODO: fallback ui 체크(최종 배포 시 제거)
-  // return <MatchingStatusFallback onRetry={refetch} className="py-8" />;
-
   if (isError) return <MatchingStatusFallback onRetry={refetch} className="py-8" />;
 
   const maleCount = data?.malePendingCount ?? 0;

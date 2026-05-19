@@ -7,9 +7,6 @@ import { motion } from 'framer-motion';
 const CountDownSection = () => {
   const { data, isError, refetch } = useMatchingStatus();
 
-  // TODO: fallback ui 체크(최종 배포 시 제거)
-  // return <MatchingStatusFallback onRetry={refetch} className="pb-16 pt-8" />;
-
   if (isError) return <MatchingStatusFallback onRetry={refetch} className="pb-16 pt-8" />;
 
   let label: string;
@@ -18,18 +15,36 @@ const CountDownSection = () => {
   if (!data) {
     label = '';
     deadline = new Date(0);
-  } else if (data.registrationOpen && data.registrationDeadline) {
-    label = '인스타팅 신청 마감까지';
-    deadline = new Date(data.registrationDeadline);
-  } else if (!data.registrationOpen && !data.resultOpen && data.resultOpenAt) {
-    label = '인스타팅 매칭 공개까지';
-    deadline = new Date(data.resultOpenAt);
-  } else if (!data.registrationOpen && data.resultOpen && data.registrationOpenAt) {
-    label = '결과를 확인하세요.\n결과는 다음날 오전 11시 까지 확인 가능합니다.';
-    deadline = new Date(data.registrationOpenAt);
   } else {
-    label = '결과를 확인하세요.\n결과는 다음날 오전 11시 까지 확인 가능합니다.';
-    deadline = new Date(0);
+    const now = new Date();
+    const firstFestivalStart = data.festivalDays[0]
+      ? new Date(`${data.festivalDays[0]}T11:00:00+09:00`)
+      : null;
+    const nextRegistrationOpenAt = data.registrationOpenAt
+      ? new Date(data.registrationOpenAt)
+      : null;
+
+    if (firstFestivalStart && now < firstFestivalStart) {
+      label = '인스타팅 서비스 오픈까지';
+      deadline = firstFestivalStart;
+    } else if (data.registrationOpen && data.registrationDeadline) {
+      label = '인스타팅 신청 마감까지';
+      deadline = new Date(data.registrationDeadline);
+    } else if (
+      !data.registrationOpen &&
+      !data.resultOpen &&
+      data.resultOpenAt &&
+      new Date(data.resultOpenAt) > now
+    ) {
+      label = '인스타팅 매칭 공개까지';
+      deadline = new Date(data.resultOpenAt);
+    } else if (nextRegistrationOpenAt && nextRegistrationOpenAt > now) {
+      label = '인스타팅 신청 오픈까지';
+      deadline = nextRegistrationOpenAt;
+    } else {
+      label = '인스타팅 서비스가 종료되었습니다.';
+      deadline = new Date(0);
+    }
   }
 
   return (

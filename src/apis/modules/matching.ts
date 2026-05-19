@@ -47,6 +47,7 @@ export interface MatchingUserStatusResponse {
   registrationDeadline: string | null;
   resultOpenAt: string | null;
   registrationOpenAt: string | null;
+  festivalDays: string[];
   pendingCount: number;
   matchedCount: number;
   unmatchedCount: number;
