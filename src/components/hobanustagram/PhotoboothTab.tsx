@@ -1,11 +1,12 @@
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
-import { Download, Film, ImagePlus, RotateCcw, Share2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Download, Film, ImagePlus, RotateCcw } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import PageLoader from '@/components/common/PageLoader';
 import { CameraOverlay } from '@/components/hobanustagram/CameraOverlay';
 import { LazyTwoShotOverlay } from '@/components/hobanustagram/LazyTwoShotOverlay';
+import { SaveSheet } from '@/components/hobanustagram/SaveSheet';
 import { StepIndicator } from '@/components/hobanustagram/StepIndicator';
 import { CHARACTER_LIST } from '@/constants/hobanustagram';
 import { fadeUpVariant } from '@/constants/animation';
@@ -132,77 +133,37 @@ export const PhotoboothTab = () => {
         </Suspense>
       )}
 
-      {cameraState !== 'idle' && (
-        <CameraOverlay
-          cameraState={cameraState}
-          videoRef={videoRef}
-          overlayRef={overlayRef}
-          bottomBarRef={bottomBarRef}
-          facingMode={facingMode}
-          isReady={isReady}
-          error={error}
-          selectedCharacter={selectedCharacter}
-          selectedCharacterData={selectedCharacterData}
-          capturedDataUrl={capturedDataUrl}
-          showFrameSelector={showFrameSelector}
-          onClose={handleClose}
-          onFlipCamera={flipCamera}
-          onToggleFrameSelector={() => setShowFrameSelector((prev) => !prev)}
-          onShutter={handleShutter}
-          onSelectCharacter={setSelectedCharacter}
-          onRetake={handleRetake}
-          onUsePhoto={handleUsePhoto}
-        />
-      )}
+      <AnimatePresence>
+        {cameraState !== 'idle' && (
+          <CameraOverlay
+            cameraState={cameraState}
+            videoRef={videoRef}
+            overlayRef={overlayRef}
+            bottomBarRef={bottomBarRef}
+            facingMode={facingMode}
+            isReady={isReady}
+            error={error}
+            selectedCharacter={selectedCharacter}
+            selectedCharacterData={selectedCharacterData}
+            capturedDataUrl={capturedDataUrl}
+            showFrameSelector={showFrameSelector}
+            onClose={handleClose}
+            onFlipCamera={flipCamera}
+            onToggleFrameSelector={() => setShowFrameSelector((prev) => !prev)}
+            onShutter={handleShutter}
+            onSelectCharacter={setSelectedCharacter}
+            onRetake={handleRetake}
+            onUsePhoto={handleUsePhoto}
+          />
+        )}
+      </AnimatePresence>
 
-      {showSaveSheet && (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center"
-          onClick={() => setShowSaveSheet(false)}
-        >
-          <div className="absolute inset-0 bg-black/40" />
-          <div
-            className="relative w-full max-w-[600px] rounded-t-2xl bg-white px-5 pt-3 pb-[calc(1.25rem+env(safe-area-inset-bottom))] animate-[slideUp_0.25s_ease-out]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-[#DDD]" />
-
-            <button
-              type="button"
-              onClick={() => void handleDownload()}
-              className="flex w-full items-center gap-4 rounded-xl px-4 py-4 text-left active:bg-[#F5F5F5]"
-            >
-              <div className="flex size-12 items-center justify-center rounded-full bg-[#EEEEEE]">
-                <Download className="size-6 text-[#333]" />
-              </div>
-              <div>
-                <p className="font-wanted-sans text-base font-semibold text-[#1D1D1D]">
-                  기기에 저장
-                </p>
-                <p className="font-wanted-sans text-xs text-[#808080]">
-                  iPhone Chrome에서는 공유하기를 이용해 주세요
-                </p>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => void handleShare()}
-              className="flex w-full items-center gap-4 rounded-xl px-4 py-4 text-left active:bg-[#F5F5F5]"
-            >
-              <div className="flex size-12 items-center justify-center rounded-full bg-[#EEEEEE]">
-                <Share2 className="size-6 text-[#333]" />
-              </div>
-              <div>
-                <p className="font-wanted-sans text-base font-semibold text-[#1D1D1D]">공유하기</p>
-                <p className="font-wanted-sans text-xs text-[#808080]">
-                  Instagram 스토리 등에 바로 올릴 수 있어요
-                </p>
-              </div>
-            </button>
-          </div>
-        </div>
-      )}
+      <SaveSheet
+        open={showSaveSheet}
+        onClose={() => setShowSaveSheet(false)}
+        onDownload={() => void handleDownload()}
+        onShare={() => void handleShare()}
+      />
 
       {!twoShotActive && (
         <div className="flex min-h-screen flex-col gap-7 bg-white px-5 py-7">
@@ -276,30 +237,24 @@ export const PhotoboothTab = () => {
 
               <img src={capturedDataUrl} alt="완성된 사진" className="w-full rounded-xl" />
 
-              <div className="flex justify-between">
+              <div className="flex gap-3">
                 <button
                   type="button"
                   onClick={handleRestartFromResult}
-                  className="flex flex-col items-center gap-2"
+                  className="flex h-[50px] flex-1 items-center justify-center gap-2 rounded-lg border border-[#DDD] bg-white active:bg-[#F5F5F5]"
                 >
-                  <div className="flex size-20 items-center justify-center rounded-full bg-[#EEEEEE]">
-                    <RotateCcw className="size-9 text-[#333]" />
-                  </div>
-                  <span className="font-wanted-sans text-sm font-medium text-[#808080]">
+                  <RotateCcw className="size-5 text-[#333]" />
+                  <span className="font-wanted-sans text-sm font-medium text-[#333]">
                     다시 찍기
                   </span>
                 </button>
                 <button
                   type="button"
                   onClick={handleSaveButtonClick}
-                  className="flex flex-col items-center gap-2"
+                  className="flex h-[50px] flex-1 items-center justify-center gap-2 rounded-lg bg-sub-red active:opacity-80"
                 >
-                  <div className="flex size-20 items-center justify-center rounded-full bg-[#EEEEEE]">
-                    <Download className="size-9 text-[#333]" />
-                  </div>
-                  <span className="font-wanted-sans text-sm font-medium text-[#808080]">
-                    다운로드
-                  </span>
+                  <Download className="size-5 text-white" />
+                  <span className="font-wanted-sans text-sm font-medium text-white">다운로드</span>
                 </button>
               </div>
             </motion.div>

@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 import {
   TWO_SHOT_FRAME_URLS,
   TWO_SHOT_PHOTO_SLOTS,
@@ -50,11 +52,15 @@ export const TwoShotSelectFrameStep = ({
                 </div>
               );
             })}
-            <img
+            <motion.img
+              key={selectedFilter}
               src={TWO_SHOT_FRAME_URLS[selectedFilter]}
               alt="프레임"
               className="relative z-10 block w-auto pointer-events-none"
               style={{ maxHeight: '50vh' }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.15 }}
             />
           </div>
         </div>

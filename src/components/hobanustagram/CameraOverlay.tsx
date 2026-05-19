@@ -1,6 +1,7 @@
 import type React from 'react';
 import { useState } from 'react';
 import { Aperture, ChevronDown, ImageDown, RotateCcw, SwitchCamera, X } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import { CHARACTER_LIST } from '@/constants/hobanustagram';
 import type { CharacterKey, OverlayStyle } from '@/types/hobanustagram';
@@ -59,7 +60,13 @@ export const CameraOverlay = ({
   };
 
   return (
-    <div className="fixed inset-0 z-100 flex justify-center bg-black">
+    <motion.div
+      className="fixed inset-0 z-100 flex justify-center bg-black"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+    >
       <div className="relative h-full w-full max-w-[600px] bg-black">
         <div
           className={`pointer-events-none absolute inset-0 z-50 bg-white transition-opacity ${showFlash ? 'opacity-80 duration-0' : 'opacity-0 duration-300'}`}
@@ -104,44 +111,52 @@ export const CameraOverlay = ({
               <X className="size-6 text-white" />
             </button>
 
-            {showFrameSelector && (
-              <div className="absolute bottom-24 w-full border-t border-border bg-white/80 px-19.75 py-5">
-                <div className="flex justify-center gap-2">
-                  {CHARACTER_LIST.map((char) => (
-                    <button
-                      key={char.key}
-                      type="button"
-                      onClick={() => onSelectCharacter(char.key)}
-                      className="flex flex-col items-center gap-2"
-                    >
-                      <div
-                        className={`size-13 overflow-hidden rounded-2xl bg-white ${
-                          selectedCharacter === char.key
-                            ? 'border-2 border-sub-red'
-                            : 'border border-gray-300'
-                        }`}
+            <AnimatePresence>
+              {showFrameSelector && (
+                <motion.div
+                  className="absolute bottom-24 w-full border-t border-border bg-white/80 px-19.75 py-5"
+                  initial={{ y: '100%' }}
+                  animate={{ y: 0 }}
+                  exit={{ y: '100%' }}
+                  transition={{ type: 'tween', ease: 'easeOut', duration: 0.25 }}
+                >
+                  <div className="flex justify-center gap-2">
+                    {CHARACTER_LIST.map((char) => (
+                      <button
+                        key={char.key}
+                        type="button"
+                        onClick={() => onSelectCharacter(char.key)}
+                        className="flex flex-col items-center gap-2"
                       >
-                        <img
-                          src={char.src}
-                          alt={char.label}
-                          className="size-full object-cover"
-                          style={
-                            char.overlayStyle.transform
-                              ? {
-                                  transform: `${char.overlayStyle.transform} scale(1.0) translateY(10px)`,
-                                }
-                              : { transform: 'translateY(10px)' }
-                          }
-                        />
-                      </div>
-                      <span className="font-wanted-sans text-xs tracking-[-0.24px] text-gray">
-                        {char.label}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+                        <div
+                          className={`size-13 overflow-hidden rounded-2xl bg-white ${
+                            selectedCharacter === char.key
+                              ? 'border-2 border-sub-red'
+                              : 'border border-gray-300'
+                          }`}
+                        >
+                          <img
+                            src={char.src}
+                            alt={char.label}
+                            className="size-full object-cover"
+                            style={
+                              char.overlayStyle.transform
+                                ? {
+                                    transform: `${char.overlayStyle.transform} scale(1.0) translateY(10px)`,
+                                  }
+                                : { transform: 'translateY(10px)' }
+                            }
+                          />
+                        </div>
+                        <span className="font-wanted-sans text-xs tracking-[-0.24px] text-gray">
+                          {char.label}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div
               ref={bottomBarRef}
@@ -210,6 +225,6 @@ export const CameraOverlay = ({
           </>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };

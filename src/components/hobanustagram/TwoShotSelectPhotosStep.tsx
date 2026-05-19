@@ -1,3 +1,5 @@
+import { AnimatePresence, motion } from 'framer-motion';
+
 import { TWO_SHOT_FRAME_URLS, TWO_SHOT_PHOTO_SLOTS } from '@/constants/twoShot';
 
 export interface TwoShotSelectPhotosStepProps {
@@ -19,7 +21,12 @@ export const TwoShotSelectPhotosStep = ({
 
   return (
     <div className="fixed inset-0 z-[39] flex justify-center bg-[#eceef3]">
-      <div className="relative flex h-full w-full max-w-[600px] flex-col bg-white">
+      <motion.div
+        className="relative flex h-full w-full max-w-[600px] flex-col bg-white"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.25 }}
+      >
         <div className="shrink-0" style={{ height: 'min(100px, 12vh)' }} />
         <div className="shrink-0 px-5 pt-7 pb-5 text-center">
           <p className="font-wanted-sans text-xl font-bold tracking-[-0.4px] text-[#1a1a1a]">
@@ -66,14 +73,32 @@ export const TwoShotSelectPhotosStep = ({
                 style={{ aspectRatio: '3 / 4', maxHeight: 'min(140px, 20vh)' }}
               >
                 <img src={photo} alt={`사진 ${index + 1}`} className="h-full w-full object-cover" />
-                {!isSelected && <div className="absolute inset-0 bg-black/40" />}
-                {isSelected && (
-                  <div className="absolute top-1.5 right-1.5 flex size-5 items-center justify-center rounded-full bg-sub-red">
-                    <span className="font-wanted-sans text-xs font-bold text-white">
-                      {selectionOrder + 1}
-                    </span>
-                  </div>
-                )}
+                <AnimatePresence>
+                  {!isSelected && (
+                    <motion.div
+                      className="absolute inset-0 bg-black/40"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.15 }}
+                    />
+                  )}
+                </AnimatePresence>
+                <AnimatePresence>
+                  {isSelected && (
+                    <motion.div
+                      className="absolute top-1.5 right-1.5 flex size-5 items-center justify-center rounded-full bg-sub-red"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    >
+                      <span className="font-wanted-sans text-xs font-bold text-white">
+                        {selectionOrder + 1}
+                      </span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </button>
             );
           })}
@@ -89,7 +114,7 @@ export const TwoShotSelectPhotosStep = ({
             <span className="font-wanted-sans text-base font-medium text-white">다음</span>
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

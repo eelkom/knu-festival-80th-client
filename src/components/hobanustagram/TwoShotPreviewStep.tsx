@@ -1,4 +1,5 @@
 import { X } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 import { TWO_SHOT_FRAME_URLS } from '@/constants/twoShot';
 
@@ -10,7 +11,13 @@ export interface TwoShotPreviewStepProps {
 export const TwoShotPreviewStep = ({ onClose, onStart }: TwoShotPreviewStepProps) => {
   return (
     <div className="fixed inset-0 z-[100] flex justify-center bg-[#eceef3]">
-      <div className="relative flex h-full w-full max-w-[600px] flex-col bg-white">
+      <motion.div
+        className="relative flex h-full w-full max-w-[600px] flex-col bg-white"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
+      >
         <div className="shrink-0 flex justify-end px-5 pt-5 pb-4">
           <button
             type="button"
@@ -61,7 +68,7 @@ export const TwoShotPreviewStep = ({ onClose, onStart }: TwoShotPreviewStepProps
             <span className="font-wanted-sans text-base font-medium text-white">촬영 시작</span>
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
