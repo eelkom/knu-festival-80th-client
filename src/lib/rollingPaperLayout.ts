@@ -36,6 +36,13 @@ type RollingPaperRect = {
   bottom: number;
 };
 
+type RollingPaperFrameInsets = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+};
+
 type RollingPaperBoardScope = {
   categoryId?: string;
   channelId?: string;
@@ -89,8 +96,15 @@ export const ROLLING_PAPER_PREVIEW_VIEWPORT = {
 export const ROLLING_PAPER_FRAME_DIMENSIONS = {
   width: 320,
   height: 320,
-  blockedPadding: 0,
 } as const;
+
+export const ROLLING_PAPER_FRAME_BLOCKED_INSETS: readonly RollingPaperFrameInsets[] = [
+  { top: 17, right: 34, bottom: 22, left: 31 },
+  { top: 32, right: 29, bottom: 32, left: 42 },
+  { top: 36, right: 12, bottom: 28, left: 13 },
+  { top: 31, right: 75, bottom: 27, left: 76 },
+  { top: 28, right: 29, bottom: 30, left: 35 },
+] as const;
 
 export const ROLLING_PAPER_NOTE_WIDTH = 80;
 export const ROLLING_PAPER_MAX_NOTES_PER_BOARD = 100;
@@ -159,6 +173,13 @@ function getFrameVariantOffset(boardVariant: number) {
   );
 }
 
+function getFrameVariantBlockedInsets(boardVariant: number) {
+  return (
+    ROLLING_PAPER_FRAME_BLOCKED_INSETS[boardVariant % ROLLING_PAPER_FRAME_BLOCKED_INSETS.length] ??
+    ROLLING_PAPER_FRAME_BLOCKED_INSETS[0]
+  );
+}
+
 function isInBoardScope(note: PlacedRollingPaperNote, scope?: RollingPaperBoardScope) {
   if (!scope?.categoryId || !scope?.channelId || !note.categoryId || !note.channelId) {
     return true;
@@ -210,12 +231,13 @@ export function getRollingPaperFrameRect(boardVariant = 0) {
 
 export function getRollingPaperBlockedFrameRect(boardVariant = 0) {
   const frameRect = getRollingPaperFrameRect(boardVariant);
+  const blockedInsets = getFrameVariantBlockedInsets(boardVariant);
 
   return {
-    left: frameRect.x - ROLLING_PAPER_FRAME_DIMENSIONS.blockedPadding,
-    top: frameRect.y - ROLLING_PAPER_FRAME_DIMENSIONS.blockedPadding,
-    right: frameRect.x + frameRect.width + ROLLING_PAPER_FRAME_DIMENSIONS.blockedPadding,
-    bottom: frameRect.y + frameRect.height + ROLLING_PAPER_FRAME_DIMENSIONS.blockedPadding,
+    left: frameRect.x + blockedInsets.left,
+    top: frameRect.y + blockedInsets.top,
+    right: frameRect.x + frameRect.width - blockedInsets.right,
+    bottom: frameRect.y + frameRect.height - blockedInsets.bottom,
   };
 }
 

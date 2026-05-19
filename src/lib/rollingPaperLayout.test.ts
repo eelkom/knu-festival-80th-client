@@ -265,9 +265,42 @@ describe('rollingPaperLayout', () => {
     const frameRect = getRollingPaperFrameRect(0);
     const blockedFrameRect = getRollingPaperBlockedFrameRect(0);
 
-    expect(blockedFrameRect.left).toBeLessThan(frameRect.x);
-    expect(blockedFrameRect.top).toBeLessThan(frameRect.y);
-    expect(blockedFrameRect.right).toBeGreaterThan(frameRect.x + frameRect.width);
-    expect(blockedFrameRect.bottom).toBeGreaterThan(frameRect.y + frameRect.height);
+    expect(blockedFrameRect.left).toBeGreaterThan(frameRect.x);
+    expect(blockedFrameRect.top).toBeGreaterThan(frameRect.y);
+    expect(blockedFrameRect.right).toBeLessThan(frameRect.x + frameRect.width);
+    expect(blockedFrameRect.bottom).toBeLessThan(frameRect.y + frameRect.height);
+  });
+
+  it('uses tighter blocked rectangles for each mascot frame variant', () => {
+    expect(getRollingPaperBlockedFrameRect(0)).toEqual({
+      left: 297,
+      top: 283,
+      right: 552,
+      bottom: 564,
+    });
+    expect(getRollingPaperBlockedFrameRect(1)).toEqual({
+      left: 308,
+      top: 298,
+      right: 557,
+      bottom: 554,
+    });
+    expect(getRollingPaperBlockedFrameRect(2)).toEqual({
+      left: 279,
+      top: 302,
+      right: 574,
+      bottom: 558,
+    });
+    expect(getRollingPaperBlockedFrameRect(3)).toEqual({
+      left: 342,
+      top: 297,
+      right: 511,
+      bottom: 559,
+    });
+    expect(getRollingPaperBlockedFrameRect(4)).toEqual({
+      left: 301,
+      top: 294,
+      right: 557,
+      bottom: 556,
+    });
   });
 });
