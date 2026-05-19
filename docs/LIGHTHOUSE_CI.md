@@ -95,6 +95,20 @@ module.exports = {
 | Accessibility | 부스 지도 이미지 alt 텍스트 `'부스 지도'` → `'${name} 부스 위치 지도'`    | 의미있는 alt 제공          |
 | Code          | `BoothCard` arrow 이미지 → `lucide-react` `ChevronDown` 아이콘으로 교체   | 벡터 아이콘, 파일 제거     |
 
+### 2026-05-19 — 전체 사이트 성능·접근성 최적화 (`refactor/#147`)
+
+**적용 내용**
+
+| 분류          | 변경 내용                                                                                                                                                       | 효과                            |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| Performance   | 롤링페이퍼 프레임·카테고리, 크레딧, 호반우스타그램, 지도·예약 아이콘 등 잔여 에셋 전체 WebP 변환                                                                | 이미지 총량 수십 MB 절감        |
+| Performance   | LCP 이미지에 `fetchPriority="high"` 적용 (CongratVideoPage heroBg, CampusMap 지도, IntroTab 포토부스)                                                           | LCP 개선                        |
+| Performance   | Pretendard CDN(`cdn.jsdelivr.net`)에 `<link rel="preconnect" crossorigin>` 추가                                                                                 | 렌더 블로킹 폰트 로드 지연 완화 |
+| Performance   | fold 아래 이미지에 `loading="lazy"` 적용 (TavernCard·TavernDetailView 메뉴판, CongratVideoPage about80th·발전기금, MemberCard 프로필, VideoCard YouTube 썸네일) | 초기 로드 개선                  |
+| Accessibility | `BoothCard`, `RollingPaperCategoryCard`, `RollingPaperChannelCard` 텍스트 `text-[#999]` → `text-[#737373]` (2.85:1 → 4.63:1, WCAG AA 통과)                      | 색상 대비 기준 충족             |
+
+> `text-[#808080]` (3.95:1, WCAG AA 미달)은 프로젝트 전반 53개소에 사용 중. 디자이너 확인 후 별도 수정 필요.
+
 ## 주의사항
 
 - `lighthouserc.cjs` — `package.json`에 `"type": "module"` 설정이 있어 `.js` 확장자는 ESM으로 해석됩니다. CommonJS 문법(`module.exports`)을 사용하기 위해 `.cjs` 확장자를 사용합니다.

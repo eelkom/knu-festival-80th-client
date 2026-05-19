@@ -1,5 +1,5 @@
 import type { BoothListItem, BoothMapItem, BoothSort } from '@/apis/modules/booth';
-import mockMenuImage from '@/assets/images/menu.jpg';
+import mockMenuImage from '@/assets/images/menu.webp';
 
 const mockBooths = [
   {

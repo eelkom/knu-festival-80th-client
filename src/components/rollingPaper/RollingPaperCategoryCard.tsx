@@ -38,7 +38,7 @@ export default function RollingPaperCategoryCard({
         <span className="font-wanted-sans text-[18px] font-semibold leading-none tracking-[-0.02em] text-black">
           {category.label}
         </span>
-        <span className="whitespace-pre-line font-wanted-sans text-sm font-medium leading-[1.3] tracking-[-0.02em] text-[#999]">
+        <span className="whitespace-pre-line font-wanted-sans text-sm font-medium leading-[1.3] tracking-[-0.02em] text-[#737373]">
           {category.description}
         </span>
       </span>

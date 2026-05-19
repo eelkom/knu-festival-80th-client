@@ -75,11 +75,11 @@ const StampTourContext = () => {
               2026 대동제가 준비한 상품
             </h2>
           </div>
-          <ul className="flex flex-col gap-8">
+          <ul className="flex flex-col gap-4">
             {STAMP_TOUR_PRIZES.map(({ rank, name, imgSrc }) => (
               <li
                 key={rank}
-                className="flex h-[196px] items-end justify-center gap-[30px] rounded-lg bg-[rgba(255,61,61,0.03)] px-[30px] py-5"
+                className="flex h-[180px] items-end justify-center gap-[30px] rounded-lg bg-[rgba(255,61,61,0.03)] px-[30px] py-5"
               >
                 <div className="flex shrink-0 flex-col items-center justify-between self-stretch py-2.5">
                   <div className="flex w-full flex-col items-center">
@@ -97,7 +97,7 @@ const StampTourContext = () => {
                     </p>
                   </div>
                   <div className="flex flex-[1_0_0] flex-col justify-center">
-                    <p className="text-center font-wanted-sans text-[24px] font-bold leading-none tracking-tight text-ink whitespace-pre-line">
+                    <p className="text-center font-wanted-sans text-[20px] font-bold leading-none tracking-tight text-ink whitespace-pre-line">
                       {name}
                     </p>
                   </div>

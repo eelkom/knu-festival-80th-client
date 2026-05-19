@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { fadeUpVariant } from '@/constants/animation';
 import { ROLES } from '@/constants/credits';
 import RoleSectionBlock from '@/components/credits/RoleSectionBlock';
-import mascotImg from '@/assets/credits/cuteBanwoo.png';
+import mascotImg from '@/assets/credits/cuteBanwoo.webp';
 
 export default function CreditsPage() {
   return (

@@ -52,6 +52,7 @@ export const IntroTab = ({ onNavigateToPhotobooth, onPhotoboothIntent }: IntroTa
           <img
             src={photoboothImage}
             alt="웹 포토부스 미리보기"
+            fetchPriority="high"
             className="w-71.75 object-contain"
           />
         </div>

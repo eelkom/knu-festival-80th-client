@@ -58,13 +58,13 @@ const BoothCard = ({
       >
         <div ref={contentRef} className="flex flex-col gap-5 pt-5">
           <div className="flex w-full flex-col gap-2.5">
-            <p className="font-wanted-sans text-body1 font-medium tracking-tight text-[#999]">
+            <p className="font-wanted-sans text-body1 font-medium tracking-tight text-[#737373]">
               진행장소: {location}
             </p>
-            <p className="font-wanted-sans text-body1 font-medium tracking-tight text-[#999]">
+            <p className="font-wanted-sans text-body1 font-medium tracking-tight text-[#737373]">
               진행시간: {time}
             </p>
-            <p className="font-wanted-sans text-body1 font-medium tracking-tight text-[#999]">
+            <p className="font-wanted-sans text-body1 font-medium tracking-tight text-[#737373]">
               참여대상: {target}
             </p>
           </div>

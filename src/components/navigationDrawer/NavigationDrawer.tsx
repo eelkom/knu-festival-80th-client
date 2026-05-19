@@ -6,7 +6,7 @@ import type { NavigationDrawerProps } from '@/types/navigationDrawer';
 import { useDrawerState } from '@/hooks/useDrawerState';
 import { NavSectionItem } from './NavSectionItem';
 import { NavLeafItem } from './NavLeafItem';
-import knu80thLogo from '@/assets/logo/knu80th_logo_dark.png';
+import knu80thLogo from '@/assets/logo/knu80th_logo_dark.webp';
 
 export const NavigationDrawer = ({ isOpen, onClose }: NavigationDrawerProps) => {
   const { openSections, activeSection, toggleSection } = useDrawerState(ALL_SECTION_IDS);

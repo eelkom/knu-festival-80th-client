@@ -138,7 +138,7 @@ export default function RollingPaperChannelCard({
             {noteCount}
           </span>
           <span
-            className={`font-wanted-sans text-[10px] font-normal leading-none tracking-[-0.02em] ${isRedState ? 'text-white' : 'text-[#999]'}`}
+            className={`font-wanted-sans text-[10px] font-normal leading-none tracking-[-0.02em] ${isRedState ? 'text-white' : 'text-[#737373]'}`}
           >
             /{channel.capacity}
           </span>

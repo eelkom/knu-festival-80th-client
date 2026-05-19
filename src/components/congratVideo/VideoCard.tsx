@@ -37,6 +37,7 @@ export default function VideoCard({ badge, videoUrl }: VideoCardProps) {
           <img
             src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`}
             alt={badge}
+            loading="lazy"
             className="absolute inset-0 size-full object-cover"
           />
           <PlayButton />

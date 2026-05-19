@@ -80,9 +80,11 @@ export default function TavernListView({
 
 function TavernCompactCard({ tavern, onSelect }: { tavern: Tavern; onSelect: () => void }) {
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onSelect}
+      whileTap={{ scale: 0.97 }}
+      transition={{ duration: 0.15, ease: 'easeInOut' }}
       className="flex w-full items-center justify-between rounded-[12px] border border-[#e5e5e5] bg-white px-5 py-4 text-left"
     >
       <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
@@ -102,7 +104,7 @@ function TavernCompactCard({ tavern, onSelect }: { tavern: Tavern; onSelect: () 
           </span>
         </div>
       )}
-    </button>
+    </motion.button>
   );
 }
 

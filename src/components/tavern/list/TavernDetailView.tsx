@@ -1,8 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { motion } from 'framer-motion';
 
 import { boothApi, imagePathToSrc } from '@/apis';
 import CampusMap from '@/components/tavern/map/CampusMap';
+import { fadeUpVariant } from '@/constants/animation';
 import { mapBoothToTavern, type Tavern } from '@/constants/taverns';
 
 type TavernDetailViewProps = {
@@ -39,7 +41,11 @@ export default function TavernDetailView({ tavern, onRegister }: TavernDetailVie
 
   return (
     <section className="flex flex-col gap-5 px-5 py-5">
-      <article className="overflow-hidden bg-white">
+      <motion.article
+        className="overflow-hidden bg-white"
+        {...fadeUpVariant}
+        transition={{ ...fadeUpVariant.transition, delay: 0 }}
+      >
         <div className="flex flex-col gap-4.5 pb-2.5">
           <div className="flex flex-col gap-2.5">
             <p className="flex gap-1 text-[16px] font-medium leading-none tracking-[-0.32px] text-[#808080]">
@@ -80,10 +86,14 @@ export default function TavernDetailView({ tavern, onRegister }: TavernDetailVie
               </p>
             ))}
         </div>
-      </article>
+      </motion.article>
 
       {menuBoardSrc && (
-        <>
+        <motion.div
+          className="flex flex-col gap-2"
+          {...fadeUpVariant}
+          transition={{ ...fadeUpVariant.transition, delay: 0.1 }}
+        >
           <div className="h-px bg-[#e5e5e5]" />
           <div className="flex flex-col gap-2">
             <h2 className="text-[16px] font-medium leading-none tracking-[-0.32px] text-[#808080]">
@@ -93,14 +103,19 @@ export default function TavernDetailView({ tavern, onRegister }: TavernDetailVie
               <img
                 src={menuBoardSrc}
                 alt={`${tavern.name} 메뉴 이미지`}
+                loading="lazy"
                 className="h-auto w-full object-contain"
               />
             </div>
           </div>
-        </>
+        </motion.div>
       )}
 
-      <div className="flex flex-col gap-2">
+      <motion.div
+        className="flex flex-col gap-2"
+        {...fadeUpVariant}
+        transition={{ ...fadeUpVariant.transition, delay: menuBoardSrc ? 0.2 : 0.1 }}
+      >
         <h2 className="text-[16px] font-medium leading-[1.6] tracking-[-0.32px] text-[#808080]">
           위치
         </h2>
@@ -111,7 +126,7 @@ export default function TavernDetailView({ tavern, onRegister }: TavernDetailVie
           focusSelected
           onSelectTavern={() => undefined}
         />
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -1,4 +1,4 @@
-import performancePreview from '@/assets/images/performance-preview.png';
+import performancePreview from '@/assets/images/performance-preview.webp';
 import ViewAllButton from '@/components/home/ViewAllButton';
 
 export default function PerformanceLocationSection() {

@@ -23,6 +23,7 @@ export default function MemberCard({ member }: { member: Member }) {
           <img
             src={member.photo}
             alt={member.name}
+            loading="lazy"
             className="size-[86%] rounded-full object-cover"
           />
         </div>
@@ -30,6 +31,7 @@ export default function MemberCard({ member }: { member: Member }) {
         <img
           src={member.photo}
           alt={member.name}
+          loading="lazy"
           className="size-[75px] shrink-0 rounded-full object-cover"
         />
       )}

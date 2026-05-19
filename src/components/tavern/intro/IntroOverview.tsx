@@ -3,11 +3,11 @@ import { FiArrowRight } from 'react-icons/fi';
 
 import { fadeUpVariant } from '@/constants/animation';
 
-import mapIconImage from '@/assets/images/map-icon.png';
-import mapPreviewImage from '@/assets/images/map-preview.png';
-import reservationIconImage from '@/assets/images/reservation-icon.png';
-import tavernGuideMapImage from '@/assets/images/tavern-guide-map.png';
-import tavernGuideReservationImage from '@/assets/images/tavern-guide-reservation.png';
+import mapIconImage from '@/assets/images/map-icon.webp';
+import mapPreviewImage from '@/assets/images/map-preview.webp';
+import reservationIconImage from '@/assets/images/reservation-icon.webp';
+import tavernGuideMapImage from '@/assets/images/tavern-guide-map.webp';
+import tavernGuideReservationImage from '@/assets/images/tavern-guide-reservation.webp';
 import { FaqAccordion } from '@/components/common/FaqAccordion';
 import { INTRO_HERO_BACKGROUND_IMAGE } from '@/components/common/GradientBanner';
 import SectionBlock from '@/components/home/SectionBlock';
