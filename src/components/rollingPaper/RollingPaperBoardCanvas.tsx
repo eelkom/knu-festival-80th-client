@@ -153,7 +153,7 @@ export default function RollingPaperBoardCanvas({
     ? getNoteScreenPosition(focusedNote, viewport, pan, renderedScale)
     : null;
   const focusedNoteWidth = focusedNote ? ROLLING_PAPER_NOTE_WIDTH * renderedScale : 0;
-  const frameRect = getRollingPaperFrameRect(variant);
+  const frameRect = getRollingPaperFrameRect(frameVariant);
   const frameImage =
     rollingPaperBoardFrames[frameVariant % rollingPaperBoardFrames.length] ??
     rollingPaperBoardFrames[0];

@@ -14,7 +14,6 @@ import {
 import RollingPaperWritePlacementPreview from './RollingPaperWritePlacementPreview';
 
 type RollingPaperWritePlaceStepProps = {
-  boardVariant: number;
   frameVariant: number;
   colorId: RollingPaperStickerColorId;
   message: string;
@@ -62,7 +61,6 @@ function PlacementControlButton({
 }
 
 export default function RollingPaperWritePlaceStep({
-  boardVariant,
   frameVariant,
   colorId,
   message,
@@ -98,7 +96,6 @@ export default function RollingPaperWritePlaceStep({
     <div className="flex flex-1 flex-col items-center">
       <div className="mt-4">
         <RollingPaperWritePlacementPreview
-          boardVariant={boardVariant}
           frameVariant={frameVariant}
           colorId={colorId}
           message={message}
