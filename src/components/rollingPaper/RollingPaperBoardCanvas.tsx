@@ -39,6 +39,8 @@ type PlacedStickerButtonProps = {
   onFocus: (note: PlacedRollingPaperNote) => void;
 };
 
+const BOARD_STICKER_PREVIEW_MESSAGE_LENGTH = 20;
+
 const PlacedStickerButton = memo(
   function PlacedStickerButton({ note, isFocused, onFocus }: PlacedStickerButtonProps) {
     const handleClick = useCallback(() => {
@@ -65,7 +67,13 @@ const PlacedStickerButton = memo(
         onPointerDown={(event) => event.stopPropagation()}
         onPointerUp={(event) => event.stopPropagation()}
       >
-        <RollingPaperSticker colorId={note.colorId} message={note.message} className="w-full" />
+        <RollingPaperSticker
+          colorId={note.colorId}
+          message={note.message}
+          className="w-full"
+          previewMaxLength={BOARD_STICKER_PREVIEW_MESSAGE_LENGTH}
+          textSizeMode="boardPreview"
+        />
       </button>
     );
   },
@@ -340,6 +348,7 @@ export default function RollingPaperBoardCanvas({
             colorId={focusedNote.colorId}
             message={focusedNote.message}
             className="w-full"
+            textSizeMode="expanded"
           />
         </button>
       )}

@@ -59,13 +59,16 @@ const FRAME_VARIANT_OFFSETS = [
   { x: 0, y: 0 },
 ] as const;
 
-const STICKER_ASPECT_RATIOS: Record<RollingPaperStickerColorId, number> = {
-  red: 249 / 271,
-  yellow: 270 / 274,
-  green: 361 / 253,
-  blue: 204 / 326,
-  purple: 259 / 259,
-  pink: 271 / 271,
+const STICKER_ASSET_DIMENSIONS: Record<
+  RollingPaperStickerColorId,
+  { width: number; height: number }
+> = {
+  red: { width: 271, height: 249 },
+  yellow: { width: 274, height: 270 },
+  green: { width: 253, height: 361 },
+  blue: { width: 326, height: 204 },
+  purple: { width: 259, height: 259 },
+  pink: { width: 271, height: 271 },
 };
 
 export const ROLLING_PAPER_CANVAS_DIMENSIONS = {
@@ -182,7 +185,8 @@ export function getRollingPaperNoteSize(
   colorId: RollingPaperStickerColorId,
   noteWidthPx = ROLLING_PAPER_NOTE_WIDTH,
 ) {
-  const height = noteWidthPx * STICKER_ASPECT_RATIOS[colorId];
+  const assetSize = STICKER_ASSET_DIMENSIONS[colorId];
+  const height = noteWidthPx * (assetSize.height / assetSize.width);
 
   return {
     width: noteWidthPx,

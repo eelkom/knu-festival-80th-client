@@ -53,6 +53,7 @@ const previewFitScale = getRollingPaperFitScale(
   ROLLING_PAPER_PREVIEW_VIEWPORT.width,
   ROLLING_PAPER_PREVIEW_VIEWPORT.height,
 );
+const BOARD_STICKER_PREVIEW_MESSAGE_LENGTH = 20;
 
 function getDistance(firstPoint: PointerSnapshot, secondPoint: PointerSnapshot) {
   return Math.hypot(firstPoint.x - secondPoint.x, firstPoint.y - secondPoint.y);
@@ -310,6 +311,8 @@ export default function RollingPaperWritePlacementPreview({
               colorId={note.colorId}
               message={note.message}
               className="absolute z-20 opacity-70 saturate-75"
+              previewMaxLength={BOARD_STICKER_PREVIEW_MESSAGE_LENGTH}
+              textSizeMode="boardPreview"
               style={{
                 width: `${ROLLING_PAPER_NOTE_WIDTH}px`,
                 left: `${note.x}%`,
@@ -324,6 +327,8 @@ export default function RollingPaperWritePlacementPreview({
               colorId={colorId}
               message={message}
               className={`absolute z-30 ${isPlacementAvailable ? '' : 'opacity-55 grayscale-[0.2]'}`}
+              previewMaxLength={BOARD_STICKER_PREVIEW_MESSAGE_LENGTH}
+              textSizeMode="boardPreview"
               style={{
                 width: `${ROLLING_PAPER_NOTE_WIDTH}px`,
                 left: `${selectedPlacement.x}%`,
