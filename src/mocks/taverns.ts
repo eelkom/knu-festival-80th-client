@@ -247,8 +247,22 @@ const mockBooths = [
 export function getMockBooths(sort: BoothSort) {
   const booths = [...mockBooths];
 
+  const partitionByWaiting = (cmp: (a: BoothListItem, b: BoothListItem) => number) => {
+    const open = booths.filter((b) => b.waitingOpen).sort(cmp);
+    const closed = booths
+      .filter((b) => !b.waitingOpen)
+      .sort((a, b) => a.name.localeCompare(b.name));
+    return [...open, ...closed];
+  };
+
+  if (sort === 'popular') {
+    return partitionByWaiting((a, b) => b.currentWaitingTeams - a.currentWaitingTeams);
+  }
   if (sort === 'waiting-asc') {
-    return booths.sort((a, b) => a.currentWaitingTeams - b.currentWaitingTeams);
+    return partitionByWaiting((a, b) => a.currentWaitingTeams - b.currentWaitingTeams);
+  }
+  if (sort === 'name-asc') {
+    return booths.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   return booths.sort((a, b) => b.likeCount - a.likeCount);

@@ -12,6 +12,7 @@ import WaitingRegistrationModal from '@/components/tavern/modals/WaitingRegistra
 import ReservationLookup from '@/components/tavern/reservation/ReservationLookup';
 import TavernTabBar from '@/components/tavern/TavernTabBar';
 import type { TopTab, WaitingReservation } from '@/components/tavern/types';
+import type { BoothSort } from '@/apis/modules/booth';
 import {
   boothToTavern,
   isPerformanceLocation,
@@ -20,6 +21,12 @@ import {
   type Tavern,
   type TavernSortKey,
 } from '@/constants/taverns';
+
+const SORT_KEY_TO_API: Record<TavernSortKey, BoothSort> = {
+  popular: 'popular',
+  shortWait: 'waiting-asc',
+  name: 'name-asc',
+};
 
 const TAVERN_TABS = ['intro', 'map', 'list', 'reservation'] as const satisfies readonly TopTab[];
 
@@ -56,9 +63,11 @@ export default function TavernMapExperience() {
   const shouldFocusPerformance = activeTab === 'map' && focusTarget === 'performance';
   const shouldFocusStamp = activeTab === 'map' && focusTarget === 'stamp';
 
+  const [sortKey, setSortKey] = useState<TavernSortKey>('shortWait');
+  const apiSort = SORT_KEY_TO_API[sortKey];
   const boothsQuery = useQuery({
-    queryKey: ['booths'],
-    queryFn: () => boothApi.listBooths('likes'),
+    queryKey: ['booths', apiSort],
+    queryFn: () => boothApi.listBooths(apiSort),
     staleTime: 30_000,
     enabled: activeTab === 'list',
   });
@@ -102,7 +111,6 @@ export default function TavernMapExperience() {
   }, [focusBoothId, focusStampName, mapTaverns, shouldFocusStamp]);
   const focusedMapTavern = focusedPerformanceTavern ?? focusedStampTavern;
 
-  const [sortKey, setSortKey] = useState<TavernSortKey>('shortWait');
   const [selectedTavern, setSelectedTavern] = useState<Tavern | null>(null);
   const [expandedMenuId, setExpandedMenuId] = useState<string | null>(null);
   const [registrationTarget, setRegistrationTarget] = useState<Tavern | null>(null);
@@ -110,16 +118,7 @@ export default function TavernMapExperience() {
   const [showReservationLimitModal, setShowReservationLimitModal] = useState(false);
   const selectedMapSourceTavern = selectedTavern ?? focusedMapTavern;
 
-  const sortedTaverns = useMemo(() => {
-    const list = [...taverns];
-    if (sortKey === 'shortWait') {
-      return list.sort((a, b) => a.waitTeams - b.waitTeams);
-    }
-    if (sortKey === 'simple') {
-      return list;
-    }
-    return list.sort((a, b) => b.popularity - a.popularity);
-  }, [taverns, sortKey]);
+  const sortedTaverns = taverns;
 
   const selectedBoothQuery = useQuery({
     queryKey: ['booth', selectedMapSourceTavern?.boothId],

@@ -2,7 +2,7 @@ import { ENDPOINTS, http, omitUndefined, unwrapApiResponse, unwrapVoidApiRespons
 import type { ApiResponse } from '@/apis/types';
 import { getMockBooth, getMockBooths } from '@/mocks/taverns';
 
-export type BoothSort = 'likes' | 'waiting-asc';
+export type BoothSort = 'likes' | 'popular' | 'waiting-asc' | 'name-asc';
 
 export type BoothType = 'TAVERN' | 'BOOTH' | 'STAGE' | 'STAMP';
 

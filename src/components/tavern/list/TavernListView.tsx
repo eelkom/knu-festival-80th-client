@@ -38,7 +38,7 @@ export default function TavernListView({
         animate="visible"
         variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
       >
-        {sortKey === 'simple' ? (
+        {sortKey === 'name' ? (
           <div className="flex flex-col gap-2">
             {taverns.map((tavern) => (
               <motion.div
