@@ -29,7 +29,7 @@ export const INSTATING_STEPS: InstatingStep[] = [
     ),
     bgSrc: step1Bg,
     illustSrc: step1Illust,
-    illustClassName: 'scale-[0.82] origin-bottom',
+    illustClassName: 'scale-[0.95] origin-bottom',
   },
   {
     step: '2단계',
@@ -41,7 +41,7 @@ export const INSTATING_STEPS: InstatingStep[] = [
     ),
     bgSrc: step2Bg,
     illustSrc: step2Illust,
-    illustClassName: 'scale-[0.82] origin-bottom',
+    illustClassName: 'scale-[0.85] -translate-y-8 origin-bottom',
   },
   {
     step: '3단계',
@@ -53,7 +53,7 @@ export const INSTATING_STEPS: InstatingStep[] = [
     ),
     bgSrc: step3Bg,
     illustSrc: step3Illust,
-    illustClassName: 'scale-[0.82] origin-bottom',
+    illustClassName: 'scale-[0.85] !object-center -translate-y-4 origin-bottom',
   },
   {
     step: '4단계',

@@ -69,7 +69,7 @@ export default function IntroOverview({ onTabChange }: IntroOverviewProps) {
                 description="메뉴와 대기 시간을 확인할 수 있어요."
                 imageSrc={tavernGuideMapImage}
                 illustrationSrc={mapIconImage}
-                illustrationClassName="p-2 bottom-[30px] left-1/2 h-[256px] w-[335px] -translate-x-1/2"
+                illustrationClassName="p-2 top-1/2 left-1/2 h-[250px] w-[300px] -translate-x-1/2 -translate-y-[52.5%]"
               />
               <IntroGuideCard
                 category="Reservation"
@@ -77,7 +77,7 @@ export default function IntroOverview({ onTabChange }: IntroOverviewProps) {
                 description={`총 3곳까지 미리 예약해\n줄을 서지 않고 기다릴 수 있어요.`}
                 imageSrc={tavernGuideReservationImage}
                 illustrationSrc={reservationIconImage}
-                illustrationClassName="p-2 bottom-[15px] left-1/2 h-[286px] w-[256px] -translate-x-1/2"
+                illustrationClassName="p-2 bottom-[30px] left-[47%] h-[270px] w-[320px] -translate-x-1/2"
               />
             </div>
           </SectionBlock>

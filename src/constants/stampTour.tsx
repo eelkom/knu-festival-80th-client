@@ -22,6 +22,7 @@ export type StampTourStep = {
   description: ReactNode;
   bgSrc: string;
   illustSrc: string;
+  illustClassName?: string;
 };
 
 export const STAMP_TOUR_STEPS: StampTourStep[] = [
@@ -38,6 +39,7 @@ export const STAMP_TOUR_STEPS: StampTourStep[] = [
     ),
     bgSrc: step1Bg,
     illustSrc: step1Img,
+    illustClassName: 'scale-[1.13] translate-y-7.5 -translate-x-2 origin-bottom',
   },
   {
     step: 'Step 2',
