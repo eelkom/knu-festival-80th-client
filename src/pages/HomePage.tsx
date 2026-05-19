@@ -46,7 +46,7 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.2)] to-transparent mix-blend-soft-light" />
         </div>
         <div className="relative flex flex-1 flex-col justify-end px-5">
-          <h1 className="text-hero text-ink">
+          <h1 className="font-wanted-sans text-hero font-extrabold tracking-[-3.7px] text-ink uppercase">
             THE
             <br />
             GRAND
@@ -102,7 +102,7 @@ export default function HomePage() {
               title={`2026 대동제만의\n특별한 굿즈를 만나보세요`}
               imageSrc={cardBg1}
               illustrationSrc={illustGoods}
-              illustrationClassName="scale-115"
+              illustrationClassName="top-4 scale-125 origin-bottom"
               to="/goods"
             />
           </div>

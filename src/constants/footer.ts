@@ -3,7 +3,6 @@ export const NAV_LINKS = [
   { label: '롤링페이퍼', to: '/rolling-paper' },
   { label: '인스타팅', to: '/instating' },
   { label: '호반우스타그램', to: '/hobanustagram' },
-  { label: '공지사항', to: '/' },
 ] as const;
 
 export const FOOTER_LINKS = [

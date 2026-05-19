@@ -18,7 +18,7 @@ export default function TimeTableScheduleItem({ entry, day }: TimeTableScheduleI
       <span className="text-body1 font-bold w-[120px] shrink-0 whitespace-nowrap">
         {entry.startTime} ~ {entry.endTime}
       </span>
-      <span className="text-body1 font-medium flex-1">{entry.name}</span>
+      <span className="text-body1 font-medium flex-1 whitespace-pre-line">{entry.name}</span>
     </div>
   );
 }

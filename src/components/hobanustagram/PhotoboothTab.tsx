@@ -253,10 +253,10 @@ export const PhotoboothTab = () => {
                 </div>
                 <div className="flex flex-col items-center gap-2">
                   <p className="font-wanted-sans text-[18px] font-semibold leading-none tracking-[-0.36px] text-black">
-                    호반우와 사진찍기
+                    호반우 필터 고르기
                   </p>
                   <p className="whitespace-pre-line text-center font-wanted-sans text-sm font-normal leading-[1.4] tracking-[-0.28px] text-gray">
-                    {'호반우 프레임과 함께 촬영할 수 있어요.'}
+                    {'호반우 필터 2종 중, 마음에 드는 필터를 선택해\n사진을 완성하세요!'}
                   </p>
                 </div>
               </button>
