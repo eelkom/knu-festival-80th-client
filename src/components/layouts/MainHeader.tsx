@@ -1,16 +1,40 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LuMenu } from 'react-icons/lu';
+import { motion } from 'framer-motion';
 
 import { NavigationDrawer } from '@/components/navigationDrawer/NavigationDrawer';
 import knu80thLogo from '@/assets/logo/knu80th_logo_dark.webp';
 
 export const MainHeader = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY < 10) {
+        setHidden(false);
+      } else if (currentY > lastScrollY.current) {
+        setHidden(true);
+      } else {
+        setHidden(false);
+      }
+      lastScrollY.current = currentY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <>
-      <header className="fixed left-1/2 top-0 z-50 w-full max-w-[600px] -translate-x-1/2 backdrop-blur-[15px] bg-[rgba(255,255,255,0.03)]">
+      <motion.header
+        className="fixed left-1/2 top-0 z-50 w-full max-w-[600px] -translate-x-1/2 backdrop-blur-[15px] bg-[rgba(255,255,255,0.03)]"
+        animate={{ y: hidden ? '-100%' : 0 }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
+      >
         <div className="mx-auto flex h-16 w-full items-center justify-between pl-5 pr-3">
           <Link
             to="/"
@@ -29,7 +53,7 @@ export const MainHeader = () => {
             <LuMenu size={24} />
           </button>
         </div>
-      </header>
+      </motion.header>
       <NavigationDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} />
     </>
   );

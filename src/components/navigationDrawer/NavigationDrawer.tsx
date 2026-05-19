@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LuX } from 'react-icons/lu';
+import { motion } from 'framer-motion';
 import { ALL_SECTION_IDS, NAV_ITEMS } from '@/constants/navigationDrawer';
 import type { NavigationDrawerProps } from '@/types/navigationDrawer';
 import { useDrawerState } from '@/hooks/useDrawerState';
@@ -60,23 +61,47 @@ export const NavigationDrawer = ({ isOpen, onClose }: NavigationDrawerProps) => 
             </button>
           </div>
 
-          <nav className="min-h-0 flex-1 overflow-y-auto border-b border-gray-200">
+          <motion.nav
+            className="min-h-0 flex-1 overflow-y-auto border-b border-gray-200"
+            animate={isOpen ? 'visible' : 'hidden'}
+            variants={{
+              hidden: {},
+              visible: { transition: { staggerChildren: 0.04, delayChildren: 0.1 } },
+            }}
+          >
             {NAV_ITEMS.map((item) => {
               if ('children' in item) {
                 return (
-                  <NavSectionItem
+                  <motion.div
                     key={item.id}
-                    item={item}
-                    isExpanded={openSections.has(item.id)}
-                    isActive={activeSection === item.id}
-                    onToggle={() => toggleSection(item.id)}
-                    onClose={onClose}
-                  />
+                    variants={{
+                      hidden: { opacity: 0, y: 8 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: 'easeOut' } },
+                    }}
+                  >
+                    <NavSectionItem
+                      item={item}
+                      isExpanded={openSections.has(item.id)}
+                      isActive={activeSection === item.id}
+                      onToggle={() => toggleSection(item.id)}
+                      onClose={onClose}
+                    />
+                  </motion.div>
                 );
               }
-              return <NavLeafItem key={item.id} item={item} onClose={onClose} />;
+              return (
+                <motion.div
+                  key={item.id}
+                  variants={{
+                    hidden: { opacity: 0, y: 8 },
+                    visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: 'easeOut' } },
+                  }}
+                >
+                  <NavLeafItem item={item} onClose={onClose} />
+                </motion.div>
+              );
             })}
-          </nav>
+          </motion.nav>
         </div>
       </div>
     </>
