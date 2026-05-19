@@ -99,11 +99,11 @@ export const ROLLING_PAPER_FRAME_DIMENSIONS = {
 } as const;
 
 export const ROLLING_PAPER_FRAME_BLOCKED_INSETS: readonly RollingPaperFrameInsets[] = [
-  { top: 15, right: 32, bottom: 20, left: 29 },
-  { top: 30, right: 27, bottom: 30, left: 40 },
-  { top: 28, right: 4, bottom: 20, left: 5 },
-  { top: 29, right: 73, bottom: 25, left: 74 },
-  { top: 26, right: 27, bottom: 28, left: 33 },
+  { top: 3, right: 20, bottom: 8, left: 17 },
+  { top: 18, right: 15, bottom: 18, left: 28 },
+  { top: 12, right: -12, bottom: 4, left: -11 },
+  { top: 17, right: 63, bottom: 15, left: 64 },
+  { top: 14, right: 15, bottom: 16, left: 21 },
 ] as const;
 
 export const ROLLING_PAPER_NOTE_WIDTH = 80;
