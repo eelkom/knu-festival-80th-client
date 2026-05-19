@@ -14,6 +14,7 @@ function toFormState(booth: BoothListItem): BoothFormState {
     name: booth.name,
     department: booth.department ?? '',
     location: booth.location ?? '',
+    description: booth.description ?? '',
     xRatio: booth.xRatio ?? null,
     yRatio: booth.yRatio ?? null,
     menuBoardImageUrl: imageUrlToPath(booth.menuBoardImageUrl),
@@ -132,6 +133,7 @@ function BoothEditForm({ boothId, boothType, boothColor, initial }: BoothEditFor
       menuBoardImageUrl: form.menuBoardImageUrl.trim() || undefined,
       department: form.department.trim() || undefined,
       location: form.location.trim() || undefined,
+      description: form.description.trim() || undefined,
     });
   };
 

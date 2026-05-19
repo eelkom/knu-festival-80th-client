@@ -12,6 +12,7 @@ const INITIAL_FORM: BoothFormState = {
   name: '',
   department: '',
   location: '',
+  description: '',
   xRatio: null,
   yRatio: null,
   menuBoardImageUrl: '',

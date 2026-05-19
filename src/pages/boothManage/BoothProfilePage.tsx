@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Camera, Check, MapPin, Pencil, X } from 'lucide-react';
+import { Camera, Check, Eye, MapPin, Pencil, X as XIcon } from 'lucide-react';
 import { useRef, useState, type ChangeEvent } from 'react';
+import { createPortal } from 'react-dom';
 
 import { ApiClientError, boothApi, imagePathToSrc, imageUrlToPath, uploadApi } from '@/apis';
 import type { BoothListItem, BoothUpdateRequest } from '@/apis';
@@ -54,6 +55,7 @@ function BoothProfileView({ boothId, booth }: BoothProfileViewProps) {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState('');
   const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const updateMutation = useMutation({
@@ -87,6 +89,7 @@ function BoothProfileView({ boothId, booth }: BoothProfileViewProps) {
     const payload: BoothUpdateRequest = {};
     if (field === 'name') payload.name = value.trim() || undefined;
     else if (field === 'department') payload.department = value.trim();
+    else if (field === 'description') payload.description = value.trim();
     updateMutation.mutate(payload);
   };
 
@@ -145,6 +148,44 @@ function BoothProfileView({ boothId, booth }: BoothProfileViewProps) {
           saving={updateMutation.isPending}
         />
       </SectionCard>
+
+      <SectionCard
+        title="소개글"
+        action={
+          <button
+            type="button"
+            onClick={() => setPreviewOpen(true)}
+            className="flex items-center gap-1 text-[13px] font-medium text-[var(--admin-primary)]"
+          >
+            <Eye size={14} />
+            미리보기
+          </button>
+        }
+      >
+        <InlineRow
+          label="소개글"
+          value={booth.description ?? ''}
+          placeholder="예: 어서오세요~"
+          editing={editingField === 'description'}
+          editValue={editValue}
+          onEdit={() => startEdit('description', booth.description ?? '')}
+          onCancel={cancelEdit}
+          onChange={setEditValue}
+          onSave={() => saveField('description', editValue)}
+          saving={updateMutation.isPending}
+          multiline
+        />
+      </SectionCard>
+
+      {previewOpen &&
+        createPortal(
+          <DetailPreviewModal
+            booth={booth}
+            descriptionOverride={editingField === 'description' ? editValue : undefined}
+            onClose={() => setPreviewOpen(false)}
+          />,
+          document.body,
+        )}
 
       <SectionCard
         title="메뉴판 이미지"
@@ -231,6 +272,70 @@ interface InlineRowProps {
   inputMode?: 'text' | 'decimal';
 }
 
+function DetailPreviewModal({
+  booth,
+  descriptionOverride,
+  onClose,
+}: {
+  booth: BoothListItem;
+  descriptionOverride?: string;
+  onClose: () => void;
+}) {
+  const description = descriptionOverride ?? booth.description ?? '어서오세요~';
+  const menuBoardSrc = imagePathToSrc(imageUrlToPath(booth.menuBoardImageUrl));
+
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col bg-white">
+      <div className="flex items-center justify-between border-b border-[#e5e5e5] px-4 py-3">
+        <span className="text-[15px] font-semibold">미리보기</span>
+        <button type="button" onClick={onClose} className="p-1">
+          <XIcon size={20} />
+        </button>
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
+        <section className="flex flex-col gap-5 px-5 py-5">
+          <article>
+            <div className="flex flex-col gap-4.5 pb-2.5">
+              <div className="flex flex-col gap-2.5">
+                {booth.department && (
+                  <p className="text-[16px] font-medium leading-none tracking-[-0.32px] text-[#808080]">
+                    {booth.department}
+                  </p>
+                )}
+                <h1 className="text-[24px] font-bold leading-none tracking-[-0.48px]">
+                  {booth.name}
+                </h1>
+                <p className="text-[16px] font-medium leading-none tracking-[-0.32px] text-[#808080]">
+                  {description}
+                </p>
+              </div>
+            </div>
+          </article>
+
+          {menuBoardSrc && (
+            <div className="flex flex-col gap-2">
+              <div className="h-px bg-[#e5e5e5]" />
+              <div className="flex flex-col gap-2">
+                <h2 className="text-[16px] font-medium leading-none tracking-[-0.32px] text-[#808080]">
+                  메뉴
+                </h2>
+                <div className="w-full overflow-hidden bg-[#f9f9f9]">
+                  <img
+                    src={menuBoardSrc}
+                    alt={`${booth.name} 메뉴 이미지`}
+                    className="h-auto w-full object-contain"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+      </div>
+    </div>
+  );
+}
+
 function InlineRow({
   label,
   value,
@@ -277,7 +382,7 @@ function InlineRow({
             disabled={saving}
             className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--admin-surface-hover)] text-[var(--admin-text-muted)]"
           >
-            <X size={16} />
+            <XIcon size={16} />
           </button>
           <button
             type="button"

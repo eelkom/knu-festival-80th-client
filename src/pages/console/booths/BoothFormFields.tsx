@@ -1,10 +1,18 @@
 import type { BoothType } from '@/apis/modules/booth';
-import { Card, Field, ImageUploadField, Input, MapLocationPicker } from '@/components/admin/ui';
+import {
+  Card,
+  Field,
+  ImageUploadField,
+  Input,
+  MapLocationPicker,
+  Textarea,
+} from '@/components/admin/ui';
 
 export interface BoothFormState {
   name: string;
   department: string;
   location: string;
+  description: string;
   xRatio: number | null;
   yRatio: number | null;
   menuBoardImageUrl: string;
@@ -62,6 +70,16 @@ export default function BoothFormFields({
               value={form.location}
               onChange={(e) => onChange({ location: e.target.value })}
               maxLength={200}
+            />
+          </Field>
+
+          <Field label="설명" hint="사용자에게 보이는 소개글" htmlFor="booth-description">
+            <Textarea
+              id="booth-description"
+              value={form.description}
+              onChange={(e) => onChange({ description: e.target.value })}
+              placeholder="예: 어서오세요~ 컴퓨터학부 주막입니다!"
+              rows={3}
             />
           </Field>
 
