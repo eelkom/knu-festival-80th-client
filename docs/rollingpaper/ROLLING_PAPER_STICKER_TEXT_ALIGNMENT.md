@@ -99,6 +99,104 @@ fontSize: `clamp(1.79px, ${BOARD_TEXT_FONT_SIZE_CQW}cqw, 12px)`;
 
 이 값은 보드에서는 작게 보이고, 포스트잇 포커스 확대 시 함께 커져 읽을 수 있게 만드는 목적이다.
 
+## 보드 배치 스티커 텍스트 표시 개선
+
+### 문제
+
+작성 모달에서는 텍스트가 스티커 안전 영역 안에 들어갔지만, 실제 보드에 작게 배치된 스티커에서는 일부 색상에서 텍스트가 넘치거나 위치가 어색하게 보였다.
+
+특히 다음 문제가 있었다.
+
+- `yellow`, `blue` 스티커는 보드에 작게 렌더링될 때 텍스트 줄이 안전 영역 밖으로 밀려 보였다.
+- `yellow` 스티커는 작성 화면 기준으로 맞춰둔 `centerY`를 그대로 사용하면서, 보드에서는 텍스트가 하단으로 치우쳐 보였다.
+- `blue`, `purple` 스티커도 작은 보드 렌더링에서는 텍스트가 중앙보다 위아래로 어긋나 보였다.
+- 전체 메시지를 작은 스티커 안에 모두 표시하려다 보니, 멀리서 봤을 때 글자가 너무 작고 읽기 어려웠다.
+- 반대로 글자 크기만 키우면 긴 메시지가 다시 스티커 영역 밖으로 넘칠 수 있었다.
+
+핵심 원인은 작성 모달, 보드 미리보기, 포커스 확대 화면이 서로 다른 크기와 목적을 가지는데 같은 텍스트 표시 기준을 사용한 것이다.
+
+### 해결
+
+스티커 텍스트 표시 모드를 다음처럼 분리했다.
+
+```ts
+export type RollingPaperStickerTextSizeMode = 'default' | 'boardPreview' | 'expanded';
+```
+
+각 모드의 역할은 다음과 같다.
+
+- `default`: 메시지 작성 모달에서 사용한다. 입력 커서와 실제 텍스트 위치가 맞아야 하므로 기존 안전 영역과 입력 제한을 유지한다.
+- `boardPreview`: 보드에 작게 붙은 스티커와 배치 미리보기에서 사용한다. 메시지는 `20자 + ...`로 줄이고, 멀리서도 보이도록 글자 크기를 더 크게 잡는다.
+- `expanded`: 사용자가 스티커를 눌러 확대했을 때 사용한다. 이때는 전체 메시지를 보여줘야 하므로 글자 크기를 보드 미리보기보다 작게 사용한다.
+
+보드 미리보기에서는 다음 값을 사용한다.
+
+```ts
+const BOARD_PREVIEW_TEXT_FONT_SIZE_CQW = 8.2;
+const EXPANDED_TEXT_FONT_SIZE_CQW = 3.1;
+```
+
+보드에 작게 붙은 스티커는 메시지를 전부 보여주지 않고 `20자 + ...`만 보여준다.
+
+```tsx
+<RollingPaperSticker
+  colorId={note.colorId}
+  message={note.message}
+  previewMaxLength={20}
+  textSizeMode="boardPreview"
+/>
+```
+
+포커스 확대 상태에서는 `previewMaxLength`를 넘기지 않는다. 따라서 원본 메시지를 그대로 렌더링하고, `textSizeMode="expanded"`로 작은 글자 크기와 줄 간격을 사용한다.
+
+```tsx
+<RollingPaperSticker
+  colorId={focusedNote.colorId}
+  message={focusedNote.message}
+  textSizeMode="expanded"
+/>
+```
+
+### 색상별 보드 정렬 보정
+
+작성 모달의 텍스트 위치는 실제 입력 UX와 연결되어 있으므로 그대로 유지한다. 대신 보드 렌더링에서만 일부 색상의 세로 중심을 보정한다.
+
+```ts
+const BOARD_TEXT_CENTER_Y_OVERRIDES: Partial<Record<RollingPaperStickerColorId, string>> = {
+  yellow: '54%',
+  blue: '50%',
+  purple: '50%',
+};
+```
+
+이 보정은 `sizeMode !== 'default'`일 때만 적용된다.
+
+```ts
+const shouldUseBoardPosition = sizeMode !== 'default';
+const centerY = shouldUseBoardPosition
+  ? (BOARD_TEXT_CENTER_Y_OVERRIDES[colorId] ?? textConfig.centerY)
+  : textConfig.centerY;
+```
+
+이렇게 분리한 이유는 다음과 같다.
+
+- 작성 모달의 커서 위치와 입력 가능 영역을 흔들지 않는다.
+- 보드에 작게 표시되는 스티커만 시각적으로 중앙에 맞춘다.
+- 특정 색상 스티커의 그림 여백 차이를 보드 렌더링 기준으로만 보정할 수 있다.
+- 확대 상태에서는 전체 메시지 표시를 유지하면서 같은 보드 위치 보정을 사용할 수 있다.
+
+### 성능 영향
+
+이번 수정은 별도의 측정, 레이아웃 재계산 루프, 이미지 리렌더링을 추가하지 않는다.
+
+변경된 동작은 다음 정도다.
+
+- 문자열을 렌더링 전에 한 번 `20자 + ...`로 자른다.
+- `textSizeMode`에 따라 CSS 값과 세로 중심 값을 선택한다.
+- 기존 `RollingPaperSticker` 컴포넌트를 그대로 재사용한다.
+
+따라서 보드 이동, 확대, 축소 성능에 의미 있는 추가 부담은 없다. 오히려 작은 스티커에서 렌더링하는 텍스트 길이가 줄어들기 때문에 긴 메시지를 전부 그리던 기존 방식보다 보드 렌더링 부담은 줄어든다.
+
 ## 입력 제한
 
 현재 메시지 길이 제한은 `ROLLING_PAPER_MAX_MESSAGE_LENGTH = 80`이다.

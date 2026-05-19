@@ -34,7 +34,7 @@ export default function RollingPaperBoardSummary({
       <div className="mt-[18px] flex items-end justify-between gap-5">
         <div className="min-w-0">
           {isCurrentBoardFull && (
-            <p className="mb-1.5 font-wanted-sans text-[15px] font-bold leading-none tracking-[-0.02em] text-sub-red">
+            <p className="mb-3 font-wanted-sans text-[15px] font-bold leading-none tracking-[-0.02em] text-sub-red">
               🎉 이 보드는 추억으로 가득 찼어요!
             </p>
           )}

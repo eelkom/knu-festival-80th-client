@@ -12,6 +12,7 @@ import {
 import {
   getRollingPaperStickerTextBoxStyle,
   getRollingPaperStickerTextStyle,
+  type RollingPaperStickerTextSizeMode,
 } from './rollingPaperStickerText';
 
 type RollingPaperStickerProps = {
@@ -21,7 +22,9 @@ type RollingPaperStickerProps = {
   className?: string;
   hideText?: boolean;
   placeholder?: string;
+  previewMaxLength?: number;
   style?: CSSProperties;
+  textSizeMode?: RollingPaperStickerTextSizeMode;
 };
 
 const rollingPaperAssets: Record<RollingPaperStickerColorId, { svg: string }> = {
@@ -56,6 +59,21 @@ function hasPositionClass(className: string) {
   return /\b(absolute|fixed|relative|sticky)\b/.test(className);
 }
 
+function getPreviewText(text: string, maxLength?: number) {
+  if (!maxLength) {
+    return text;
+  }
+
+  const normalizedText = text.replace(/\s+/g, ' ').trim();
+  const characters = [...normalizedText];
+
+  if (characters.length <= maxLength) {
+    return normalizedText;
+  }
+
+  return `${characters.slice(0, maxLength).join('')}...`;
+}
+
 export default function RollingPaperSticker({
   colorId,
   message,
@@ -63,13 +81,15 @@ export default function RollingPaperSticker({
   className = '',
   hideText = false,
   placeholder,
+  previewMaxLength,
   style,
+  textSizeMode = 'default',
 }: RollingPaperStickerProps) {
   const color = getRollingPaperStickerColor(colorId);
   const paper = rollingPaperAssets[color.id];
-  const textBoxStyle = getRollingPaperStickerTextBoxStyle(color.id);
-  const textStyle = getRollingPaperStickerTextStyle(message, color.id);
-  const text = message || placeholder || '';
+  const textBoxStyle = getRollingPaperStickerTextBoxStyle(color.id, textSizeMode);
+  const textStyle = getRollingPaperStickerTextStyle(message, color.id, textSizeMode);
+  const text = message ? getPreviewText(message, previewMaxLength) : (placeholder ?? '');
   const isPlaceholder = !message && Boolean(placeholder);
   const positionClassName = hasPositionClass(className) ? '' : 'relative';
 

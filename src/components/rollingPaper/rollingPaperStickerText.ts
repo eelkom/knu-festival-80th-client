@@ -6,6 +6,8 @@ type RollingPaperStickerTextStyle = Pick<
   'fontSize' | 'letterSpacing' | 'lineHeight'
 >;
 
+export type RollingPaperStickerTextSizeMode = 'default' | 'boardPreview' | 'expanded';
+
 type RollingPaperStickerTextInputStyle = RollingPaperStickerTextStyle &
   Pick<CSSProperties, 'boxSizing'> & {
     paddingTop: string;
@@ -26,6 +28,14 @@ type RollingPaperStickerTextConfig = {
 const FIGMA_MODAL_FONT_SIZE_PX = 11;
 const STICKER_TEXT_LINE_HEIGHT = 1.5;
 const BOARD_TEXT_FONT_SIZE_CQW = 5.7;
+const BOARD_PREVIEW_TEXT_FONT_SIZE_CQW = 8.2;
+const EXPANDED_TEXT_FONT_SIZE_CQW = 3.1;
+
+const BOARD_TEXT_CENTER_Y_OVERRIDES: Partial<Record<RollingPaperStickerColorId, string>> = {
+  yellow: '54%',
+  blue: '50%',
+  purple: '50%',
+};
 
 export const ROLLING_PAPER_STICKER_TEXT_CONFIG: Record<
   RollingPaperStickerColorId,
@@ -99,12 +109,17 @@ export function getRollingPaperStickerTextConfig(colorId: RollingPaperStickerCol
 
 export function getRollingPaperStickerTextBoxStyle(
   colorId: RollingPaperStickerColorId,
+  sizeMode: RollingPaperStickerTextSizeMode = 'default',
 ): CSSProperties {
   const textConfig = getRollingPaperStickerTextConfig(colorId);
+  const shouldUseBoardPosition = sizeMode !== 'default';
+  const centerY = shouldUseBoardPosition
+    ? (BOARD_TEXT_CENTER_Y_OVERRIDES[colorId] ?? textConfig.centerY)
+    : textConfig.centerY;
 
   return {
     left: textConfig.centerX,
-    top: textConfig.centerY,
+    top: centerY,
     width: textConfig.width,
     height: textConfig.height,
     transform: 'translate(-50%, -50%)',
@@ -177,14 +192,26 @@ function getRollingPaperStickerEstimatedLines(
 export function getRollingPaperStickerTextStyle(
   message: string,
   colorId: RollingPaperStickerColorId,
+  sizeMode: RollingPaperStickerTextSizeMode = 'default',
 ): RollingPaperStickerTextStyle {
   void message;
   void colorId;
 
+  const fontSizeCqw =
+    sizeMode === 'expanded'
+      ? EXPANDED_TEXT_FONT_SIZE_CQW
+      : sizeMode === 'boardPreview'
+        ? BOARD_PREVIEW_TEXT_FONT_SIZE_CQW
+        : BOARD_TEXT_FONT_SIZE_CQW;
+  const minFontSize = sizeMode === 'expanded' ? 2.6 : 3;
+  const maxFontSize = sizeMode === 'expanded' ? 12 : 14;
+  const lineHeight =
+    sizeMode === 'boardPreview' ? 1.35 : sizeMode === 'expanded' ? 1.45 : STICKER_TEXT_LINE_HEIGHT;
+
   return {
-    fontSize: `clamp(2.8px, ${BOARD_TEXT_FONT_SIZE_CQW}cqw, 14px)`,
+    fontSize: `clamp(${minFontSize}px, ${fontSizeCqw}cqw, ${maxFontSize}px)`,
     letterSpacing: '-0.03em',
-    lineHeight: String(STICKER_TEXT_LINE_HEIGHT),
+    lineHeight: String(lineHeight),
   };
 }
 
