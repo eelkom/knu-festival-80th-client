@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm, useWatch, type UseFormRegisterReturn } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { ApiClientError, matchingApi } from '@/apis';
 import { useMatchingStatus } from '@/hooks/instating/useMatchingStatus';
@@ -9,12 +9,14 @@ import AlertModal from '@/components/instating/AlertModal';
 import CountdownText from '@/components/instating/CountdownText';
 import { useQueryInvalidateAtDeadline } from '@/hooks/instating/useQueryInvalidateAtDeadline';
 import { fadeUpVariant } from '@/constants/animation';
+import { LEGAL_LINKS } from '@/constants/legal';
 
 type FormValues = {
   gender: 'male' | 'female';
   instagramId: string;
   phone: string;
-  ageConfirm: boolean;
+  termsAgreed: boolean;
+  privacyAgreed: boolean;
 };
 
 const InstatingApplyView = () => {
@@ -35,10 +37,18 @@ const InstatingApplyView = () => {
     handleSubmit,
     control,
     formState: { errors, isValid, isSubmitting },
-  } = useForm<FormValues>({ defaultValues: { gender: 'male' }, mode: 'onChange' });
+  } = useForm<FormValues>({
+    defaultValues: {
+      gender: 'male',
+      termsAgreed: false,
+      privacyAgreed: false,
+    },
+    mode: 'onChange',
+  });
 
   const gender = useWatch({ control, name: 'gender' });
-  const ageConfirm = useWatch({ control, name: 'ageConfirm' });
+  const termsAgreed = useWatch({ control, name: 'termsAgreed' });
+  const privacyAgreed = useWatch({ control, name: 'privacyAgreed' });
 
   const onSubmit = async ({ gender, instagramId, phone }: FormValues) => {
     setSubmitError(null);
@@ -192,34 +202,20 @@ const InstatingApplyView = () => {
             </div>
           </div>
 
-          {/* Age confirmation */}
-          <label className="flex cursor-pointer items-center gap-1.5">
-            <input
-              type="checkbox"
-              {...register('ageConfirm', { required: true })}
-              className="hidden"
+          <div className="flex flex-col gap-2">
+            <ConsentCheckbox
+              id="instating-terms-agreed"
+              checked={termsAgreed}
+              label="(필수) 대동제 웹서비스 이용약관에 동의합니다."
+              inputProps={register('termsAgreed', { required: true })}
             />
-            <div
-              className={`flex size-5 items-center justify-center rounded-sm ${
-                ageConfirm ? 'bg-sub-red' : 'border-2 border-border bg-surface'
-              }`}
-            >
-              {ageConfirm && (
-                <svg width="12" height="9" viewBox="0 0 12 9" fill="none" aria-hidden="true">
-                  <path
-                    d="M1 4L4.5 7.5L11 1"
-                    stroke="white"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              )}
-            </div>
-            <span className="font-wanted-sans text-body1 font-medium tracking-tight text-ink">
-              만 19세 이상 성인임을 확인합니다.
-            </span>
-          </label>
+            <ConsentCheckbox
+              id="instating-privacy-agreed"
+              checked={privacyAgreed}
+              label="(필수) 개인정보 수집 및 이용에 동의합니다."
+              inputProps={register('privacyAgreed', { required: true })}
+            />
+          </div>
         </motion.fieldset>
 
         {submitError && (
@@ -253,7 +249,7 @@ const InstatingApplyView = () => {
 
         {/* Notice */}
         <motion.div
-          className="rounded-md bg-[#f9f9f9] p-4"
+          className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-4"
           {...fadeUpVariant}
           transition={{ ...fadeUpVariant.transition, delay: 0.2 }}
         >
@@ -263,10 +259,69 @@ const InstatingApplyView = () => {
             *본 서비스는 만 19세 이상의 성인(대학생)을 대상으로 합니다. 미성년자의 참여를 엄격히
             금지하며, 허위 정보 입력으로 발생한 문제의 책임은 본인에게 있습니다.
           </p>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 font-wanted-sans text-body2 font-semibold tracking-tight">
+            <a
+              href={LEGAL_LINKS.termsOfService}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[#B2B2B2] underline underline-offset-2"
+            >
+              약관 전문 보기
+            </a>
+            <a
+              href={LEGAL_LINKS.privacyConsent}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[#B2B2B2] underline underline-offset-2"
+            >
+              동의서 전문 보기
+            </a>
+          </div>
         </motion.div>
       </form>
     </>
   );
 };
+
+function ConsentCheckbox({
+  id,
+  checked,
+  label,
+  inputProps,
+}: {
+  id: string;
+  checked?: boolean;
+  label: string;
+  inputProps?: UseFormRegisterReturn;
+}) {
+  return (
+    <div className="flex items-start gap-1.5">
+      <input id={id} type="checkbox" className="sr-only" {...inputProps} />
+      <label
+        htmlFor={id}
+        className={`mt-0.5 flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-sm ${
+          checked ? 'bg-sub-red' : 'border-2 border-border bg-surface'
+        }`}
+      >
+        {checked && (
+          <svg width="12" height="9" viewBox="0 0 12 9" fill="none" aria-hidden="true">
+            <path
+              d="M1 4L4.5 7.5L11 1"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        )}
+      </label>
+      <p className="min-w-0 font-wanted-sans text-[13px] font-medium leading-[1.5] tracking-tight text-ink">
+        <label htmlFor={id} className="cursor-pointer">
+          {label}
+        </label>
+      </p>
+    </div>
+  );
+}
 
 export default InstatingApplyView;

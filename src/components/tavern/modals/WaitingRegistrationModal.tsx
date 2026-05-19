@@ -5,6 +5,7 @@ import { registerWaiting } from '@/apis/modules/waiting';
 import { toApiClientError } from '@/apis/error';
 import FieldInput from '@/components/tavern/shared/FieldInput';
 import type { WaitingReservation } from '@/components/tavern/types';
+import { LEGAL_LINKS } from '@/constants/legal';
 import type { Tavern } from '@/constants/taverns';
 
 type WaitingRegistrationModalProps = {
@@ -21,13 +22,17 @@ export default function WaitingRegistrationModal({
   const [name, setName] = useState('');
   const [partySize, setPartySize] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [termsAgreed, setTermsAgreed] = useState(false);
+  const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const canSubmit =
     !loading &&
     name.trim().length > 0 &&
     partySize.trim().length > 0 &&
-    phoneNumber.trim().length > 0;
+    phoneNumber.trim().length > 0 &&
+    termsAgreed &&
+    privacyAgreed;
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -69,13 +74,13 @@ export default function WaitingRegistrationModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center bg-black/30">
-      <div className="relative min-h-dvh w-full max-w-[375px]">
+    <div className="fixed inset-0 z-50 flex justify-center overflow-y-auto bg-black/30">
+      <div className="flex min-h-dvh w-full max-w-[375px] items-center px-5 py-8">
         <section
           role="dialog"
           aria-modal="true"
           aria-labelledby="waiting-registration-title"
-          className="absolute left-5 right-5 top-[170px] overflow-hidden rounded-[12px] bg-white pb-6 pt-4"
+          className="relative w-full overflow-hidden rounded-[12px] bg-white pb-6 pt-4"
         >
           <div className="flex items-center justify-between px-5">
             <h2
@@ -94,8 +99,8 @@ export default function WaitingRegistrationModal({
             </button>
           </div>
 
-          <form className="mt-8 flex flex-col gap-8 px-6" onSubmit={handleSubmit}>
-            <div className="flex flex-col gap-[18px]">
+          <form className="mt-6 flex flex-col gap-5 px-6" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-1">
                 <p className="text-[16px] font-semibold leading-[1.5] tracking-[-0.16px]">
                   예약 주막
@@ -131,6 +136,25 @@ export default function WaitingRegistrationModal({
               />
             </div>
 
+            <div className="flex flex-col gap-4">
+              <ConsentCheckbox
+                id="waiting-terms-agreed"
+                checked={termsAgreed}
+                onChange={setTermsAgreed}
+                label="(필수) 대동제 웹서비스 이용약관에 동의합니다."
+                linkLabel="[약관 전문 보기]"
+                linkUrl={LEGAL_LINKS.termsOfService}
+              />
+              <ConsentCheckbox
+                id="waiting-privacy-agreed"
+                checked={privacyAgreed}
+                onChange={setPrivacyAgreed}
+                label="(필수) 개인정보 수집 및 이용에 동의합니다."
+                linkLabel="[동의서 전문 보기]"
+                linkUrl={LEGAL_LINKS.privacyConsent}
+              />
+            </div>
+
             {error && (
               <p className="rounded-[8px] bg-red-50 px-4 py-3 text-[14px] font-medium text-[#ff3d3d]">
                 {error}
@@ -149,6 +173,65 @@ export default function WaitingRegistrationModal({
           </form>
         </section>
       </div>
+    </div>
+  );
+}
+
+function ConsentCheckbox({
+  id,
+  checked,
+  onChange,
+  label,
+  linkLabel,
+  linkUrl,
+}: {
+  id: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: string;
+  linkLabel: string;
+  linkUrl: string;
+}) {
+  return (
+    <div className="flex items-start gap-1.5">
+      <input
+        id={id}
+        type="checkbox"
+        checked={checked}
+        className="sr-only"
+        onChange={(event) => onChange(event.target.checked)}
+      />
+      <label
+        htmlFor={id}
+        className={`mt-0.5 flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-sm ${
+          checked ? 'bg-[#ff3d3d]' : 'border-2 border-[#e5e5e5] bg-white'
+        }`}
+      >
+        {checked && (
+          <svg width="12" height="9" viewBox="0 0 12 9" fill="none" aria-hidden="true">
+            <path
+              d="M1 4L4.5 7.5L11 1"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        )}
+      </label>
+      <p className="min-w-0 text-[13px] font-medium leading-[1.5] tracking-[-0.26px] text-[#1a1a1a]">
+        <label htmlFor={id} className="cursor-pointer">
+          {label}
+        </label>{' '}
+        <a
+          href={linkUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="whitespace-nowrap text-[#B2B2B2] underline underline-offset-2"
+        >
+          {linkLabel}
+        </a>
+      </p>
     </div>
   );
 }

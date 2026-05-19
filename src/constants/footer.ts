@@ -1,3 +1,5 @@
+import { LEGAL_LINKS } from '@/constants/legal';
+
 export const NAV_LINKS = [
   { label: '지도 정보', to: '/map' },
   { label: '롤링페이퍼', to: '/rolling-paper' },
@@ -6,7 +8,7 @@ export const NAV_LINKS = [
 ] as const;
 
 export const FOOTER_LINKS = [
-  { label: '개인정보 보호', to: '/' },
-  { label: '서비스 이용 약관', to: '/' },
-  { label: '쿠키 설정', to: '/' },
+  { label: '개인정보처리방침', href: LEGAL_LINKS.privacyPolicy },
+  { label: '서비스 이용약관', href: LEGAL_LINKS.termsOfService },
+  { label: '이메일무단수집거부', href: LEGAL_LINKS.emailHarvestingProhibited },
 ] as const;

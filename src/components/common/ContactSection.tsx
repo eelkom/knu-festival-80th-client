@@ -19,22 +19,21 @@ export const ContactSection = () => {
 
       <div className="rounded-xl border border-black/8 bg-[#f7f7f7] px-5 py-4">
         <div className="flex flex-col gap-4">
-          {[
-            { label: '이메일', value: 'likelion_knu@knu.ac.kr' },
-            { label: '위치', value: '경북대학교 일청담 광장 운영부스' },
-          ].map(({ label, value }, i) => (
-            <div key={label}>
-              {i !== 0 && <div className="mb-4 border-t border-black/70" />}
-              <div className="flex items-center justify-between gap-3">
-                <p className="font-wanted-sans text-[15px] font-semibold tracking-[-0.02em] text-black">
-                  {label}
-                </p>
-                <p className="font-wanted-sans text-sm font-medium tracking-[-0.01em] text-black/55">
-                  {value}
-                </p>
+          {[{ label: '위치', value: '경북대학교 일청담 광장 운영부스' }].map(
+            ({ label, value }, i) => (
+              <div key={label}>
+                {i !== 0 && <div className="mb-4 border-t border-black/70" />}
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-wanted-sans text-[15px] font-semibold tracking-[-0.02em] text-black">
+                    {label}
+                  </p>
+                  <p className="font-wanted-sans text-sm font-medium tracking-[-0.01em] text-black/55">
+                    {value}
+                  </p>
+                </div>
               </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       </div>
 
