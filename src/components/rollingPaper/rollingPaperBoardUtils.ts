@@ -1,5 +1,7 @@
+import { ApiClientError } from '@/apis';
 import { getRollingPaperPerformanceNotesFromSearch } from '@/mocks/rollingPaperPerformance';
 import type { PlacedRollingPaperNote } from '@/lib/rollingPaperLayout';
+import { POSTIT_BOARD_FULL_ERROR_CODES } from './rollingPaperBoardConstants';
 
 export function getInitialRollingPaperPlacedNotes() {
   if (!import.meta.env.DEV || typeof window === 'undefined') {
@@ -36,4 +38,30 @@ export function isSameRollingPaperConflictPlaceholder(
     Math.abs(note.x - nextNote.x) < 0.01 &&
     Math.abs(note.y - nextNote.y) < 0.01
   );
+}
+
+export function isRollingPaperBoardFullError(error: unknown) {
+  if (!(error instanceof ApiClientError)) {
+    return false;
+  }
+
+  if (
+    error.code &&
+    POSTIT_BOARD_FULL_ERROR_CODES.some((boardFullCode) => boardFullCode === error.code)
+  ) {
+    return true;
+  }
+
+  const normalizedMessage = error.message.toLowerCase();
+  return [
+    '보드에 메시지가 가득',
+    '보드가 가득',
+    '더 이상 작성할 수',
+    '정원이 가득',
+    '정원 초과',
+    'board full',
+    'board capacity',
+    'maxnotecount',
+    'note count',
+  ].some((keyword) => normalizedMessage.includes(keyword));
 }
