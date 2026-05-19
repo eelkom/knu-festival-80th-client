@@ -16,6 +16,7 @@ export interface BoothListItem {
   waitingOpen: boolean;
   currentWaitingTeams: number;
   department: string | null;
+  description: string | null;
   location: string | null;
   type: BoothType | null;
   color: string | null;
@@ -59,6 +60,7 @@ export interface BoothUpdateRequest {
   menuBoardImageUrl?: string;
   department?: string;
   location?: string;
+  description?: string;
 }
 
 export interface BoothPasswordChangeRequest {

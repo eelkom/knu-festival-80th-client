@@ -35,9 +35,7 @@ export default function TavernDetailView({ tavern, onRegister }: TavernDetailVie
   const menuBoardSrc = resolveMenuBoardSrc(tavern.menuBoardImageUrl);
   const metaItems = [tavern.department].filter(Boolean);
   const isBooth = tavern.type === 'BOOTH';
-  const description = tavern.department
-    ? `${tavern.department}의 ${isBooth ? '부스' : '주막'}입니다. 어서오세요~`
-    : '어서오세요~';
+  const description = tavern.description ?? '어서오세요~';
 
   return (
     <section className="flex flex-col gap-5 px-5 py-5">

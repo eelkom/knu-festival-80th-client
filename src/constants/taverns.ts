@@ -13,6 +13,7 @@ export type Tavern = {
   id: string;
   boothId: number;
   department: string;
+  description: string | null;
   name: string;
   location: string;
   waitTeams: number;
@@ -48,6 +49,7 @@ export function boothToTavern(booth: BoothListItem): Tavern {
     id: String(booth.boothId),
     boothId: booth.boothId,
     department: booth.department ?? '',
+    description: booth.description ?? null,
     name: booth.name,
     location: booth.location ?? '',
     waitTeams: booth.currentWaitingTeams,
@@ -67,6 +69,7 @@ export function mapBoothToTavern(booth: BoothMapItem): Tavern {
     id: String(booth.boothId),
     boothId: booth.boothId,
     department: '',
+    description: null,
     name: booth.name,
     location: '',
     waitTeams: 0,
