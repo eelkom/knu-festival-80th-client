@@ -9,8 +9,8 @@ import {
 } from 'react';
 import { FiCircle, FiMinus, FiPlus } from 'react-icons/fi';
 
-import hobanuStampMarker from '@/assets/images/hobanu.png';
-import tavernMapLowDetailImage from '@/assets/images/map-low-detail.png';
+import hobanuStampMarker from '@/assets/images/hobanu.webp';
+import tavernMapLowDetailImage from '@/assets/images/map-low-detail.webp';
 import tavernMapImage from '@/assets/images/map.svg';
 import {
   festivalMap,
@@ -513,6 +513,7 @@ export default function CampusMap({
             ref={highDetailImageRef}
             src={tavernMapImage}
             alt="대동제 주막 지도"
+            fetchPriority="high"
             className="pointer-events-none absolute block h-auto max-w-none select-none"
             style={mapImageStyle}
             decoding="async"

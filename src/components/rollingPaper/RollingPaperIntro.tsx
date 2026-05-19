@@ -15,7 +15,7 @@ export default function RollingPaperIntro() {
         className="relative flex min-h-[270px] items-end overflow-hidden px-5 py-[42px]"
         style={{ backgroundImage: INTRO_HERO_BACKGROUND_IMAGE }}
       >
-        <h1 className="relative font-wanted-sans text-[40px] font-bold leading-[1.4] tracking-[-0.02em] text-ink">
+        <h1 className="relative font-wanted-sans text-[2rem] font-bold leading-[1.4] tracking-[-0.02em] text-ink">
           80주년
           <br />
           롤링페이퍼

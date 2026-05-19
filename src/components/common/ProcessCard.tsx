@@ -6,9 +6,17 @@ export interface ProcessCardProps {
   description: React.ReactNode;
   bgSrc: string;
   illustSrc: string;
+  illustClassName?: string;
 }
 
-const ProcessCard = ({ step, title, description, bgSrc, illustSrc }: ProcessCardProps) => (
+const ProcessCard = ({
+  step,
+  title,
+  description,
+  bgSrc,
+  illustSrc,
+  illustClassName,
+}: ProcessCardProps) => (
   <article className="relative flex aspect-4/5 w-full flex-col overflow-hidden rounded-md p-6">
     <div aria-hidden className="pointer-events-none absolute inset-0">
       <img src={bgSrc} alt="" loading="lazy" className="absolute inset-0 size-full object-cover" />
@@ -37,7 +45,7 @@ const ProcessCard = ({ step, title, description, bgSrc, illustSrc }: ProcessCard
         src={illustSrc}
         alt=""
         loading="lazy"
-        className="pointer-events-none absolute inset-0 size-full object-contain object-bottom"
+        className={`pointer-events-none absolute inset-0 size-full object-contain object-bottom${illustClassName ? ` ${illustClassName}` : ''}`}
       />
     </div>
   </article>

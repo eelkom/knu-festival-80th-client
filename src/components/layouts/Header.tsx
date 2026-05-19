@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LuMenu } from 'react-icons/lu';
 import { NavigationDrawer } from '@/components/navigationDrawer/NavigationDrawer';
-import knu80thLogo from '@/assets/logo/knu80th_logo_dark.png';
+import knu80thLogo from '@/assets/logo/knu80th_logo_dark.webp';
 
 export const Header = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -10,7 +10,7 @@ export const Header = () => {
   return (
     <>
       <header className="fixed left-1/2 top-0 z-50 h-16 w-full max-w-150 -translate-x-1/2 bg-white">
-        <div className="mx-auto flex h-full max-w-[600px] items-center justify-between px-5">
+        <div className="mx-auto flex h-full max-w-[600px] items-center justify-between pl-5 pr-3">
           <Link to="/" aria-label="홈으로 이동">
             <img
               src={knu80thLogo}

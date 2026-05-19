@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import { fadeUpVariant } from '@/constants/animation';
 import { ArrowDown } from 'lucide-react';
 import heroBg from '@/assets/home/hero-bg.webp';
 import cardBg1 from '@/assets/home/card-bg-1.webp';
@@ -45,7 +46,7 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-b from-[rgba(0,0,0,0.2)] to-transparent mix-blend-soft-light" />
         </div>
         <div className="relative flex flex-1 flex-col justify-end px-5">
-          <h1 className="text-hero text-ink">
+          <h1 className="font-wanted-sans text-hero font-extrabold tracking-[-3.7px] text-ink uppercase">
             THE
             <br />
             GRAND
@@ -76,7 +77,7 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      <div className="pt-16 flex flex-col gap-32 bg-background overflow-x-hidden">
+      <div className="pt-16 flex flex-col gap-32 bg-background">
         <div ref={countdownRef}>
           <SectionBlock label="Count Down" title="축제까지 남은 시간">
             <div className="px-5">
@@ -101,7 +102,7 @@ export default function HomePage() {
               title={`2026 대동제만의\n특별한 굿즈를 만나보세요`}
               imageSrc={cardBg1}
               illustrationSrc={illustGoods}
-              illustrationClassName="scale-115"
+              illustrationClassName="top-4 scale-125 origin-bottom"
               to="/goods"
             />
           </div>
@@ -176,7 +177,9 @@ export default function HomePage() {
         </SectionBlock>
 
         <FaqAccordion items={MOCK_FAQ} />
-        <ContactSection />
+        <motion.div {...fadeUpVariant}>
+          <ContactSection />
+        </motion.div>
       </div>
     </div>
   );

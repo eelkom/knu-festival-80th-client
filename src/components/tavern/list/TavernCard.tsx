@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { FiChevronDown } from 'react-icons/fi';
 
 import { imagePathToSrc } from '@/apis';
@@ -106,6 +107,31 @@ export default function TavernCard({
         </div>
         {menuBoardSrc && (
           <>
+            <AnimatePresence initial={false}>
+              {expanded && (
+                <motion.div
+                  ref={menuRef}
+                  key="menu"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+                  className="w-full scroll-mt-28 overflow-hidden"
+                >
+                  <div className="flex flex-col gap-2.5 border-t border-[#e5e5e5] pt-5">
+                    <p className="text-[16px] font-medium leading-none tracking-[-0.32px] text-black/50">
+                      메뉴판
+                    </p>
+                    <img
+                      src={menuBoardSrc}
+                      alt={`${tavern.name} 메뉴판`}
+                      loading="lazy"
+                      className="h-auto w-full bg-[#f9f9f9] object-contain"
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
             <button
               type="button"
               className="flex items-center justify-center text-[14px] font-medium leading-none tracking-[-0.28px] text-[#808080]"
@@ -114,25 +140,10 @@ export default function TavernCard({
             >
               {expanded ? '접기' : '메뉴'}
               <FiChevronDown
-                className={`transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
+                className={`transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}
                 size={24}
               />
             </button>
-            {expanded && (
-              <div
-                ref={menuRef}
-                className="flex w-full scroll-mt-28 flex-col gap-2.5 border-t border-[#e5e5e5] pt-5"
-              >
-                <p className="text-[16px] font-medium leading-none tracking-[-0.32px] text-black/50">
-                  메뉴판
-                </p>
-                <img
-                  src={menuBoardSrc}
-                  alt={`${tavern.name} 메뉴판`}
-                  className="h-auto w-full bg-[#f9f9f9] object-contain"
-                />
-              </div>
-            )}
           </>
         )}
       </div>

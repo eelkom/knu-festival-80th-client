@@ -6,7 +6,7 @@ import type { NavigationDrawerProps } from '@/types/navigationDrawer';
 import { useDrawerState } from '@/hooks/useDrawerState';
 import { NavSectionItem } from './NavSectionItem';
 import { NavLeafItem } from './NavLeafItem';
-import knu80thLogo from '@/assets/logo/knu80th_logo_dark.png';
+import knu80thLogo from '@/assets/logo/knu80th_logo_dark.webp';
 
 export const NavigationDrawer = ({ isOpen, onClose }: NavigationDrawerProps) => {
   const { openSections, activeSection, toggleSection } = useDrawerState(ALL_SECTION_IDS);
@@ -47,7 +47,7 @@ export const NavigationDrawer = ({ isOpen, onClose }: NavigationDrawerProps) => 
               'linear-gradient(0deg, rgba(255, 208, 189, 0.50) 0.58%, rgba(255, 255, 255, 0.50) 60.27%), #FFF',
           }}
         >
-          <div className="flex h-16 shrink-0 items-center justify-between px-5">
+          <div className="flex h-16 shrink-0 items-center justify-between pl-5 pr-3">
             <Link to="/" aria-label="홈으로 이동" onClick={onClose}>
               <img
                 src={knu80thLogo}

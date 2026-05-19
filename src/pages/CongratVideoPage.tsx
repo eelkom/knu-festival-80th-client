@@ -20,6 +20,7 @@ export default function CongratVideoPage() {
           <img
             src={heroBg}
             alt=""
+            fetchPriority="high"
             className="absolute inset-0 size-full object-cover opacity-10 max-w-none"
           />
           <div
@@ -31,10 +32,10 @@ export default function CongratVideoPage() {
           />
         </div>
         <div className="relative flex flex-col items-start w-full">
-          <p className="text-display1 text-ink font-bold uppercase tracking-tighter leading-none mb-4.5">
+          <p className="text-[2rem] text-ink font-bold uppercase tracking-tighter leading-none mb-4.5">
             경북대학교
           </p>
-          <p className="text-display1 text-ink font-bold uppercase tracking-tighter leading-none">
+          <p className="text-[2rem] text-ink font-bold uppercase tracking-tighter leading-none">
             80주년
           </p>
         </div>
@@ -55,6 +56,7 @@ export default function CongratVideoPage() {
             <img
               src={about80thImg}
               alt="경북대학교 80주년"
+              loading="lazy"
               className="w-full aspect-335/242 object-cover"
             />
           </div>
@@ -80,6 +82,7 @@ export default function CongratVideoPage() {
             <img
               src={anniversaryFundImg}
               alt="발전기금"
+              loading="lazy"
               className="w-full aspect-square object-cover"
             />
           </div>

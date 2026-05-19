@@ -10,6 +10,7 @@ export const useHorizontalDragScroll = <T extends HTMLElement>() => {
     pointerId: -1,
     startX: 0,
     scrollLeft: 0,
+    hasCapturedPointer: false,
   });
   const suppressClickRef = useRef(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -39,10 +40,9 @@ export const useHorizontalDragScroll = <T extends HTMLElement>() => {
       pointerId: event.pointerId,
       startX: event.clientX,
       scrollLeft: scrollElement.scrollLeft,
+      hasCapturedPointer: false,
     };
     suppressClickRef.current = false;
-    setIsDragging(true);
-    event.currentTarget.setPointerCapture(event.pointerId);
   };
 
   const handlePointerMove = (event: PointerEvent<T>) => {
@@ -53,10 +53,14 @@ export const useHorizontalDragScroll = <T extends HTMLElement>() => {
     const deltaX = event.clientX - state.startX;
     if (Math.abs(deltaX) > DRAG_THRESHOLD_PX) {
       suppressClickRef.current = true;
+      if (!state.hasCapturedPointer) {
+        event.currentTarget.setPointerCapture(event.pointerId);
+        state.hasCapturedPointer = true;
+      }
+      setIsDragging(true);
+      scrollElement.scrollLeft = state.scrollLeft - deltaX;
+      event.preventDefault();
     }
-
-    scrollElement.scrollLeft = state.scrollLeft - deltaX;
-    event.preventDefault();
   };
 
   const handleClickCapture = (event: MouseEvent<T>) => {

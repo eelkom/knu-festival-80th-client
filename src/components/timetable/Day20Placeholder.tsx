@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import day20PlaceholderImg from '@/assets/timetable/day20-placeholder.webp';
 
 export default function Day20Placeholder() {
@@ -9,10 +10,12 @@ export default function Day20Placeholder() {
       <div className="flex flex-col gap-[10px] items-center w-full">
         <p className="text-body1 text-text-muted">내일 공연을 위해 준비중이에요!</p>
         <div className="relative w-full aspect-square">
-          <img
+          <motion.img
             src={day20PlaceholderImg}
             alt="준비중"
             className="absolute inset-0 size-full object-contain"
+            animate={{ y: [0, -10, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           />
         </div>
       </div>

@@ -15,6 +15,7 @@ export type InstatingStep = {
   description: ReactNode;
   bgSrc: string;
   illustSrc: string;
+  illustClassName?: string;
 };
 
 export const INSTATING_STEPS: InstatingStep[] = [
@@ -28,6 +29,7 @@ export const INSTATING_STEPS: InstatingStep[] = [
     ),
     bgSrc: step1Bg,
     illustSrc: step1Illust,
+    illustClassName: 'scale-[0.82] origin-bottom',
   },
   {
     step: '2단계',
@@ -39,6 +41,7 @@ export const INSTATING_STEPS: InstatingStep[] = [
     ),
     bgSrc: step2Bg,
     illustSrc: step2Illust,
+    illustClassName: 'scale-[0.82] origin-bottom',
   },
   {
     step: '3단계',
@@ -50,6 +53,7 @@ export const INSTATING_STEPS: InstatingStep[] = [
     ),
     bgSrc: step3Bg,
     illustSrc: step3Illust,
+    illustClassName: 'scale-[0.82] origin-bottom',
   },
   {
     step: '4단계',
@@ -61,6 +65,7 @@ export const INSTATING_STEPS: InstatingStep[] = [
     ),
     bgSrc: step4Bg,
     illustSrc: step4Illust,
+    illustClassName: 'scale-[1.05] origin-bottom',
   },
 ];
 

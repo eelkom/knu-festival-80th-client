@@ -78,8 +78,8 @@ export type StampTourPrize = {
 
 export const STAMP_TOUR_PRIZES: StampTourPrize[] = [
   { rank: '1위', name: '애플워치', imgSrc: prize1 },
-  { rank: '2위', name: '신세계 상품권\n10만원', imgSrc: prize2 },
-  { rank: '3위', name: '배달의 민족\n3만원', imgSrc: prize3 },
+  { rank: '2위', name: '보조배터리', imgSrc: prize2 },
+  { rank: '3위', name: '휴대용 선풍기', imgSrc: prize3 },
 ];
 
 export type Booth = {
