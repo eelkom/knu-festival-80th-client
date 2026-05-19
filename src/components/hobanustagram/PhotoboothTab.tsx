@@ -209,25 +209,23 @@ export const PhotoboothTab = () => {
           <StepIndicator currentStep={tabStep} />
 
           {tabStep === 1 && (
-            <div className="flex flex-col gap-7">
-              <motion.div className="flex flex-col items-center gap-2.5" {...fadeUpVariant}>
+            <motion.div className="flex flex-col gap-7" {...fadeUpVariant}>
+              <div className="flex flex-col items-center gap-2.5">
                 <p className="font-wanted-sans text-2xl font-bold leading-none tracking-[-0.48px] text-black">
                   포토부스
                 </p>
                 <p className="font-wanted-sans text-base font-normal leading-none tracking-[-0.32px] text-gray">
                   원하는 항목을 선택 후 카메라 권한을 허용해주세요.
                 </p>
-              </motion.div>
+              </div>
 
-              <motion.button
+              <button
                 type="button"
                 onClick={handleOpenTwoShot}
                 onFocus={preloadTwoShotExperience}
                 onPointerEnter={preloadTwoShotExperience}
                 onTouchStart={preloadTwoShotExperience}
                 className="flex h-67 w-full flex-col items-center justify-center gap-8 rounded-xl border border-dashed border-sub-red bg-[rgba(255,61,61,0.04)]"
-                {...fadeUpVariant}
-                transition={{ ...fadeUpVariant.transition, delay: 0.1 }}
               >
                 <div className="flex size-20 items-center justify-center rounded-full bg-linear-to-br from-[#ffa855] to-sub-red">
                   <Film className="size-9 text-white" />
@@ -240,17 +238,15 @@ export const PhotoboothTab = () => {
                     {'2가지 필터 중 하나를 선택하고\n4컷을 찍은 뒤 마음에 드는 2장을 골라보세요.'}
                   </p>
                 </div>
-              </motion.button>
+              </button>
 
-              <motion.button
+              <button
                 type="button"
                 onClick={handleOpenCamera}
                 onFocus={preloadCharacterOverlays}
                 onPointerEnter={preloadCharacterOverlays}
                 onTouchStart={preloadCharacterOverlays}
                 className="flex h-67 w-full flex-col items-center justify-center gap-8 rounded-xl border border-dashed border-sub-red bg-[rgba(255,61,61,0.04)]"
-                {...fadeUpVariant}
-                transition={{ ...fadeUpVariant.transition, delay: 0.2 }}
               >
                 <div className="flex size-20 items-center justify-center rounded-full bg-linear-to-br from-[#ffa855] to-sub-red">
                   <ImagePlus className="size-9 text-white" />
@@ -263,34 +259,24 @@ export const PhotoboothTab = () => {
                     {'호반우 프레임과 함께 촬영할 수 있어요.'}
                   </p>
                 </div>
-              </motion.button>
-            </div>
+              </button>
+            </motion.div>
           )}
 
           {tabStep === 2 && capturedDataUrl && (
-            <div className="flex flex-col gap-6">
-              <motion.div className="flex flex-col items-center gap-2.5" {...fadeUpVariant}>
+            <motion.div className="flex flex-col gap-6" {...fadeUpVariant}>
+              <div className="flex flex-col items-center gap-2.5">
                 <p className="font-wanted-sans text-2xl font-bold leading-none tracking-[-0.48px] text-black">
                   완성!🎉
                 </p>
                 <p className="font-wanted-sans text-base font-normal leading-none tracking-[-0.32px] text-gray">
                   저장하거나 다시 찍어보세요!
                 </p>
-              </motion.div>
+              </div>
 
-              <motion.img
-                src={capturedDataUrl}
-                alt="완성된 사진"
-                className="w-full rounded-xl"
-                {...fadeUpVariant}
-                transition={{ ...fadeUpVariant.transition, delay: 0.1 }}
-              />
+              <img src={capturedDataUrl} alt="완성된 사진" className="w-full rounded-xl" />
 
-              <motion.div
-                className="flex justify-between"
-                {...fadeUpVariant}
-                transition={{ ...fadeUpVariant.transition, delay: 0.15 }}
-              >
+              <div className="flex justify-between">
                 <button
                   type="button"
                   onClick={handleRestartFromResult}
@@ -315,8 +301,8 @@ export const PhotoboothTab = () => {
                     다운로드
                   </span>
                 </button>
-              </motion.div>
-            </div>
+              </div>
+            </motion.div>
           )}
         </div>
       )}

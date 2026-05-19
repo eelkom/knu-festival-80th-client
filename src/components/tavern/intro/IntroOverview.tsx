@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
-import { FiArrowRight, FiChevronDown } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import { FiArrowRight } from 'react-icons/fi';
 
 import { fadeUpVariant } from '@/constants/animation';
 
@@ -9,9 +8,9 @@ import mapPreviewImage from '@/assets/images/map-preview.png';
 import reservationIconImage from '@/assets/images/reservation-icon.png';
 import tavernGuideMapImage from '@/assets/images/tavern-guide-map.png';
 import tavernGuideReservationImage from '@/assets/images/tavern-guide-reservation.png';
+import { FaqAccordion } from '@/components/common/FaqAccordion';
 import { INTRO_HERO_BACKGROUND_IMAGE } from '@/components/common/GradientBanner';
 import SectionBlock from '@/components/home/SectionBlock';
-import SectionHeading from '@/components/tavern/shared/SectionHeading';
 import type { TopTab } from '@/components/tavern/types';
 import { tavernFaqs } from '@/constants/taverns';
 
@@ -31,7 +30,7 @@ export default function IntroOverview({ onTabChange }: IntroOverviewProps) {
         style={{ backgroundImage: INTRO_HERO_BACKGROUND_IMAGE }}
       >
         <div className="relative flex flex-col gap-[30px]">
-          <h1 className="text-[40px] font-bold leading-[1.4] tracking-[-0.8px] text-[#1a1a1a]">
+          <h1 className="text-[2rem] font-bold leading-[1.4] tracking-[-0.8px] text-[#1a1a1a]">
             지도 및
             <br />
             주막 정보
@@ -97,8 +96,22 @@ export default function IntroOverview({ onTabChange }: IntroOverviewProps) {
         </SectionBlock>
       </section>
 
-      <FaqSection />
-      <ContactSection />
+      <section className="py-8">
+        <FaqAccordion label="FAQ" title="자주 묻는 질문" items={tavernFaqs} />
+      </section>
+
+      <motion.section className="flex flex-col gap-5 px-5 py-16" {...fadeUpVariant}>
+        <h2 className="text-[18px] font-bold leading-[1.4] tracking-[-0.36px]">
+          궁금한 점 간편하게 문의하기
+        </h2>
+        <button
+          type="button"
+          className="flex w-fit items-center gap-1.5 rounded-full border border-black py-2.5 pl-5 pr-3.5 text-[14px] font-medium leading-none"
+        >
+          간편 문의하기
+          <FiArrowRight size={24} />
+        </button>
+      </motion.section>
     </>
   );
 }
@@ -182,99 +195,6 @@ function MapPreviewIllustration() {
         className="size-full object-cover"
         style={{ objectPosition: MAP_PREVIEW_OBJECT_POSITION }}
       />
-    </div>
-  );
-}
-
-function FaqSection() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  const toggle = (index: number) => {
-    setOpenIndex((prev) => (prev === index ? null : index));
-  };
-
-  return (
-    <motion.section className="flex flex-col gap-12 px-5 py-8" {...fadeUpVariant}>
-      <SectionHeading eyebrow="FAQ" title="자주 묻는 질문" variant="small" />
-      <div className="flex flex-col gap-2.5">
-        {tavernFaqs.map((faq, index) => {
-          const isOpen = openIndex === index;
-
-          return (
-            <div key={faq.question} className="bg-[#f9f9f9] p-5">
-              <button
-                type="button"
-                className="flex w-full cursor-pointer items-start justify-between gap-4 text-left text-[16px] font-bold leading-none tracking-[-0.32px]"
-                aria-expanded={isOpen}
-                onClick={() => toggle(index)}
-              >
-                {faq.question}
-                <motion.div
-                  animate={{ rotate: isOpen ? 180 : 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="shrink-0"
-                >
-                  <FiChevronDown size={20} />
-                </motion.div>
-              </button>
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div
-                    initial={{ height: 0 }}
-                    animate={{ height: 'auto' }}
-                    exit={{ height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden"
-                  >
-                    <p className="mt-3 text-[16px] font-medium leading-[1.5] text-[#4d4d4d]">
-                      {faq.answer}
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          );
-        })}
-      </div>
-    </motion.section>
-  );
-}
-
-function ContactSection() {
-  return (
-    <motion.section className="flex flex-col gap-12 px-5 py-16" {...fadeUpVariant}>
-      <div className="flex flex-col gap-1.5">
-        <SectionHeading eyebrow="Contact" title="문의하기" variant="small" />
-        <p className="text-[16px] font-medium leading-[1.4] tracking-[-0.32px] text-[#808080]">
-          축제 운영팀에 언제든 연락하세요
-        </p>
-      </div>
-      <div className="grid gap-5 bg-[#f9f9f9] p-5">
-        <ContactItem label="이메일" value="likelion_knu@knu.ac.kr" />
-        <ContactItem label="전화" value="02-1234-5678" />
-        <ContactItem label="위치" value="경북대학교 본관" />
-      </div>
-      <div className="flex flex-col gap-5">
-        <h2 className="text-[18px] font-bold leading-[1.4] tracking-[-0.36px]">
-          궁금한 점 간편하게 문의하기
-        </h2>
-        <button
-          type="button"
-          className="flex w-fit items-center gap-1.5 rounded-full border border-black py-2.5 pl-5 pr-3.5 text-[14px] font-medium leading-none"
-        >
-          간편 문의하기
-          <FiArrowRight size={24} />
-        </button>
-      </div>
-    </motion.section>
-  );
-}
-
-function ContactItem({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="grid gap-3 text-[16px] leading-[1.5]">
-      <strong>{label}</strong>
-      <span className="font-medium text-[#4d4d4d]">{value}</span>
     </div>
   );
 }

@@ -31,10 +31,10 @@ export default function CongratVideoPage() {
           />
         </div>
         <div className="relative flex flex-col items-start w-full">
-          <p className="text-display1 text-ink font-bold uppercase tracking-tighter leading-none mb-4.5">
+          <p className="text-[2rem] text-ink font-bold uppercase tracking-tighter leading-none mb-4.5">
             경북대학교
           </p>
-          <p className="text-display1 text-ink font-bold uppercase tracking-tighter leading-none">
+          <p className="text-[2rem] text-ink font-bold uppercase tracking-tighter leading-none">
             80주년
           </p>
         </div>

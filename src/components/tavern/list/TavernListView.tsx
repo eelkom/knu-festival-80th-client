@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import TavernCard from '@/components/tavern/list/TavernCard';
 import { tavernSortOptions, type Tavern, type TavernSortKey } from '@/constants/taverns';
 
@@ -22,33 +23,57 @@ export default function TavernListView({
 }: TavernListViewProps) {
   return (
     <section className="flex flex-col gap-3 px-5 py-6">
-      <h1 className="text-[24px] font-bold leading-[1.6] tracking-[-0.48px]">주막 목록</h1>
+      <motion.h1
+        className="text-[24px] font-bold leading-[1.6] tracking-[-0.48px]"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
+      >
+        주막 목록
+      </motion.h1>
       <TavernSortTabs sortKey={sortKey} onSortChange={onSortChange} />
-      {sortKey === 'simple' ? (
-        <div className="flex flex-col gap-2">
-          {taverns.map((tavern) => (
-            <TavernCompactCard
-              key={tavern.id}
-              tavern={tavern}
-              onSelect={() => onSelectTavern(tavern)}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col gap-3">
-          {taverns.map((tavern) => (
-            <div key={tavern.id}>
-              <TavernCard
-                expanded={expandedMenuId === tavern.id}
-                tavern={tavern}
-                onMenuToggle={() => onMenuToggle(expandedMenuId === tavern.id ? null : tavern.id)}
-                onRegister={() => onRegister(tavern)}
-                onSelect={() => onSelectTavern(tavern)}
-              />
-            </div>
-          ))}
-        </div>
-      )}
+      <motion.div
+        key={sortKey}
+        initial="hidden"
+        animate="visible"
+        variants={{ visible: { transition: { staggerChildren: 0.05 } } }}
+      >
+        {sortKey === 'simple' ? (
+          <div className="flex flex-col gap-2">
+            {taverns.map((tavern) => (
+              <motion.div
+                key={tavern.id}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+                }}
+              >
+                <TavernCompactCard tavern={tavern} onSelect={() => onSelectTavern(tavern)} />
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {taverns.map((tavern) => (
+              <motion.div
+                key={tavern.id}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: 'easeOut' } },
+                }}
+              >
+                <TavernCard
+                  expanded={expandedMenuId === tavern.id}
+                  tavern={tavern}
+                  onMenuToggle={() => onMenuToggle(expandedMenuId === tavern.id ? null : tavern.id)}
+                  onRegister={() => onRegister(tavern)}
+                  onSelect={() => onSelectTavern(tavern)}
+                />
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </motion.div>
     </section>
   );
 }

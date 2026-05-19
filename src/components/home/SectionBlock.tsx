@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 import ViewAllButton from '@/components/home/ViewAllButton';
+import { fadeUpVariant } from '@/constants/animation';
 
 type SectionBlockProps = {
   label: string;
@@ -38,13 +39,7 @@ export default function SectionBlock({
   children,
 }: SectionBlockProps) {
   return (
-    <motion.div
-      className={className}
-      initial={animate ? { opacity: 0, y: 40 } : false}
-      whileInView={animate ? { opacity: 1, y: 0 } : undefined}
-      viewport={animate ? { once: true, amount: 0.2 } : undefined}
-      transition={animate ? { duration: 0.5, ease: 'easeOut' } : undefined}
-    >
+    <motion.div className={className} {...(animate ? fadeUpVariant : {})}>
       <div className={headingClassName}>
         <p className={labelClassName}>{label}</p>
         <h2 className={titleClassName}>{title}</h2>

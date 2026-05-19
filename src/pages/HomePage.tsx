@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
+import { fadeUpVariant } from '@/constants/animation';
 import { ArrowDown } from 'lucide-react';
 import heroBg from '@/assets/home/hero-bg.webp';
 import cardBg1 from '@/assets/home/card-bg-1.webp';
@@ -76,7 +77,7 @@ export default function HomePage() {
         </motion.div>
       </section>
 
-      <div className="pt-16 flex flex-col gap-32 bg-background overflow-x-hidden">
+      <div className="pt-16 flex flex-col gap-32 bg-background">
         <div ref={countdownRef}>
           <SectionBlock label="Count Down" title="축제까지 남은 시간">
             <div className="px-5">
@@ -176,7 +177,9 @@ export default function HomePage() {
         </SectionBlock>
 
         <FaqAccordion items={MOCK_FAQ} />
-        <ContactSection />
+        <motion.div {...fadeUpVariant}>
+          <ContactSection />
+        </motion.div>
       </div>
     </div>
   );
