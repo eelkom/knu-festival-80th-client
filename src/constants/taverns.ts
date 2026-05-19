@@ -1,6 +1,6 @@
 import type { BoothListItem, BoothMapItem, BoothType } from '@/apis/modules/booth';
 
-export type TavernSortKey = 'popular' | 'shortWait' | 'simple';
+export type TavernSortKey = 'popular' | 'shortWait' | 'name';
 
 export const festivalMap = {
   id: 'knu-festival-2026-final-map',
@@ -86,7 +86,7 @@ export function mapBoothToTavern(booth: BoothMapItem): Tavern {
 export const tavernSortOptions: Array<{ key: TavernSortKey; label: string }> = [
   { key: 'popular', label: '인기순' },
   { key: 'shortWait', label: '대기 적은 순' },
-  { key: 'simple', label: '간단히' },
+  { key: 'name', label: '이름순' },
 ];
 
 export const tavernFaqs = [
