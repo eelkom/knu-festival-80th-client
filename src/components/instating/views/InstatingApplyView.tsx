@@ -225,57 +225,57 @@ const InstatingApplyView = () => {
         )}
 
         {/* Submit */}
-        <motion.button
-          type="submit"
-          disabled={!isRegistrationOpen || !isValid || isSubmitting}
-          className={`h-[50px] w-full rounded-md font-wanted-sans text-body1 font-medium tracking-tight text-surface ${
-            !isRegistrationOpen
-              ? 'bg-black'
-              : isValid && !isSubmitting
-                ? 'bg-sub-red'
-                : 'bg-[#CCCCCC]'
-          }`}
+        <motion.div
+          className="flex flex-col gap-7"
           {...fadeUpVariant}
           transition={{ ...fadeUpVariant.transition, delay: 0.15 }}
         >
-          {!isRegistrationOpen ? (
-            <CountdownText deadline={registrationOpenAt} />
-          ) : isSubmitting ? (
-            '신청 중...'
-          ) : (
-            '인스타팅 신청하기'
-          )}
-        </motion.button>
+          <button
+            type="submit"
+            disabled={!isRegistrationOpen || !isValid || isSubmitting}
+            className={`h-[50px] w-full rounded-md font-wanted-sans text-body1 font-medium tracking-tight text-surface ${
+              !isRegistrationOpen
+                ? 'bg-black'
+                : isValid && !isSubmitting
+                  ? 'bg-sub-red'
+                  : 'bg-[#CCCCCC]'
+            }`}
+          >
+            {!isRegistrationOpen ? (
+              <CountdownText deadline={registrationOpenAt} />
+            ) : isSubmitting ? (
+              '신청 중...'
+            ) : (
+              '인스타팅 신청하기'
+            )}
+          </button>
 
-        {/* Notice */}
-        <motion.div
-          className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-4"
-          {...fadeUpVariant}
-          transition={{ ...fadeUpVariant.transition, delay: 0.2 }}
-        >
-          <p className="font-wanted-sans text-body2 font-medium leading-[1.5] tracking-tight text-gray">
-            *신청 후 취소는 불가능하오니 신중하게 결정해 주세요.
-            <br />
-            *본 서비스는 만 19세 이상의 성인(대학생)을 대상으로 합니다. 미성년자의 참여를 엄격히
-            금지하며, 허위 정보 입력으로 발생한 문제의 책임은 본인에게 있습니다.
-          </p>
-          <div className="flex flex-wrap gap-x-3 gap-y-1 font-wanted-sans text-body2 font-semibold tracking-tight">
-            <a
-              href={LEGAL_LINKS.termsOfService}
-              target="_blank"
-              rel="noreferrer"
-              className="text-[#B2B2B2] underline underline-offset-2"
-            >
-              약관 전문 보기
-            </a>
-            <a
-              href={LEGAL_LINKS.privacyConsent}
-              target="_blank"
-              rel="noreferrer"
-              className="text-[#B2B2B2] underline underline-offset-2"
-            >
-              동의서 전문 보기
-            </a>
+          {/* Notice */}
+          <div className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-4">
+            <p className="font-wanted-sans text-body2 font-medium leading-[1.5] tracking-tight text-gray">
+              *신청 후 취소는 불가능하오니 신중하게 결정해 주세요.
+              <br />
+              *본 서비스는 만 19세 이상의 성인(대학생)을 대상으로 합니다. 미성년자의 참여를 엄격히
+              금지하며, 허위 정보 입력으로 발생한 문제의 책임은 본인에게 있습니다.
+            </p>
+            <div className="flex flex-wrap gap-x-3 gap-y-1 font-wanted-sans text-body2 font-semibold tracking-tight">
+              <a
+                href={LEGAL_LINKS.termsOfService}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#B2B2B2] underline underline-offset-2"
+              >
+                약관 전문 보기
+              </a>
+              <a
+                href={LEGAL_LINKS.privacyConsent}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[#B2B2B2] underline underline-offset-2"
+              >
+                동의서 전문 보기
+              </a>
+            </div>
           </div>
         </motion.div>
       </form>

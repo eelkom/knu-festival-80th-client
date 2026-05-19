@@ -39,7 +39,7 @@ export default function MapOverview({
       >
         <h1 className="text-[24px] font-bold leading-[1.6] tracking-[-0.48px]">지도</h1>
         <p className="text-[16px] font-normal leading-[1.4] tracking-[-0.32px] text-[#808080]">
-          가고 싶은 주막의 아이콘을 클릭해보세요.
+          가고 싶은 위치의 아이콘을 클릭해보세요.
         </p>
       </motion.div>
 
