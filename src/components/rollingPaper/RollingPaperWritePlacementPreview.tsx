@@ -35,7 +35,6 @@ type PinchGestureSnapshot = {
 };
 
 type RollingPaperWritePlacementPreviewProps = {
-  boardVariant: number;
   frameVariant: number;
   colorId: RollingPaperStickerColorId;
   message: string;
@@ -53,6 +52,7 @@ const previewFitScale = getRollingPaperFitScale(
   ROLLING_PAPER_PREVIEW_VIEWPORT.width,
   ROLLING_PAPER_PREVIEW_VIEWPORT.height,
 );
+const BOARD_STICKER_PREVIEW_MESSAGE_LENGTH = 20;
 
 function getDistance(firstPoint: PointerSnapshot, secondPoint: PointerSnapshot) {
   return Math.hypot(firstPoint.x - secondPoint.x, firstPoint.y - secondPoint.y);
@@ -66,7 +66,6 @@ function getMidpoint(firstPoint: PointerSnapshot, secondPoint: PointerSnapshot) 
 }
 
 export default function RollingPaperWritePlacementPreview({
-  boardVariant,
   frameVariant,
   colorId,
   message,
@@ -83,8 +82,8 @@ export default function RollingPaperWritePlacementPreview({
   const boardRef = useRef<HTMLDivElement>(null);
   const activePointersRef = useRef(new Map<number, PointerSnapshot>());
   const pinchGestureRef = useRef<PinchGestureSnapshot | null>(null);
-  const frameRect = getRollingPaperFrameRect(boardVariant);
-  const blockedFrameRect = getRollingPaperBlockedFrameRect(boardVariant);
+  const frameRect = getRollingPaperFrameRect(frameVariant);
+  const blockedFrameRect = getRollingPaperBlockedFrameRect(frameVariant);
   const frameImage =
     rollingPaperBoardFrames[frameVariant % rollingPaperBoardFrames.length] ??
     rollingPaperBoardFrames[0];
@@ -310,6 +309,8 @@ export default function RollingPaperWritePlacementPreview({
               colorId={note.colorId}
               message={note.message}
               className="absolute z-20 opacity-70 saturate-75"
+              previewMaxLength={BOARD_STICKER_PREVIEW_MESSAGE_LENGTH}
+              textSizeMode="boardPreview"
               style={{
                 width: `${ROLLING_PAPER_NOTE_WIDTH}px`,
                 left: `${note.x}%`,
@@ -324,6 +325,8 @@ export default function RollingPaperWritePlacementPreview({
               colorId={colorId}
               message={message}
               className={`absolute z-30 ${isPlacementAvailable ? '' : 'opacity-55 grayscale-[0.2]'}`}
+              previewMaxLength={BOARD_STICKER_PREVIEW_MESSAGE_LENGTH}
+              textSizeMode="boardPreview"
               style={{
                 width: `${ROLLING_PAPER_NOTE_WIDTH}px`,
                 left: `${selectedPlacement.x}%`,

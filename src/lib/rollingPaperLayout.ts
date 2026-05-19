@@ -36,6 +36,13 @@ type RollingPaperRect = {
   bottom: number;
 };
 
+type RollingPaperFrameInsets = {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+};
+
 type RollingPaperBoardScope = {
   categoryId?: string;
   channelId?: string;
@@ -59,13 +66,16 @@ const FRAME_VARIANT_OFFSETS = [
   { x: 0, y: 0 },
 ] as const;
 
-const STICKER_ASPECT_RATIOS: Record<RollingPaperStickerColorId, number> = {
-  red: 249 / 271,
-  yellow: 270 / 274,
-  green: 361 / 253,
-  blue: 204 / 326,
-  purple: 259 / 259,
-  pink: 271 / 271,
+const STICKER_ASSET_DIMENSIONS: Record<
+  RollingPaperStickerColorId,
+  { width: number; height: number }
+> = {
+  red: { width: 271, height: 249 },
+  yellow: { width: 274, height: 270 },
+  green: { width: 253, height: 361 },
+  blue: { width: 326, height: 204 },
+  purple: { width: 259, height: 259 },
+  pink: { width: 271, height: 271 },
 };
 
 export const ROLLING_PAPER_CANVAS_DIMENSIONS = {
@@ -86,8 +96,15 @@ export const ROLLING_PAPER_PREVIEW_VIEWPORT = {
 export const ROLLING_PAPER_FRAME_DIMENSIONS = {
   width: 320,
   height: 320,
-  blockedPadding: 26,
 } as const;
+
+export const ROLLING_PAPER_FRAME_BLOCKED_INSETS: readonly RollingPaperFrameInsets[] = [
+  { top: 1, right: 5, bottom: 4, left: 2 },
+  { top: 13, right: 10, bottom: 13, left: 23 },
+  { top: 8, right: -3, bottom: 8, left: -3 },
+  { top: 12, right: 58, bottom: 10, left: 59 },
+  { top: 9, right: 10, bottom: 11, left: 16 },
+] as const;
 
 export const ROLLING_PAPER_NOTE_WIDTH = 80;
 export const ROLLING_PAPER_MAX_NOTES_PER_BOARD = 100;
@@ -156,6 +173,13 @@ function getFrameVariantOffset(boardVariant: number) {
   );
 }
 
+function getFrameVariantBlockedInsets(boardVariant: number) {
+  return (
+    ROLLING_PAPER_FRAME_BLOCKED_INSETS[boardVariant % ROLLING_PAPER_FRAME_BLOCKED_INSETS.length] ??
+    ROLLING_PAPER_FRAME_BLOCKED_INSETS[0]
+  );
+}
+
 function isInBoardScope(note: PlacedRollingPaperNote, scope?: RollingPaperBoardScope) {
   if (!scope?.categoryId || !scope?.channelId || !note.categoryId || !note.channelId) {
     return true;
@@ -182,7 +206,8 @@ export function getRollingPaperNoteSize(
   colorId: RollingPaperStickerColorId,
   noteWidthPx = ROLLING_PAPER_NOTE_WIDTH,
 ) {
-  const height = noteWidthPx * STICKER_ASPECT_RATIOS[colorId];
+  const assetSize = STICKER_ASSET_DIMENSIONS[colorId];
+  const height = noteWidthPx * (assetSize.height / assetSize.width);
 
   return {
     width: noteWidthPx,
@@ -206,12 +231,13 @@ export function getRollingPaperFrameRect(boardVariant = 0) {
 
 export function getRollingPaperBlockedFrameRect(boardVariant = 0) {
   const frameRect = getRollingPaperFrameRect(boardVariant);
+  const blockedInsets = getFrameVariantBlockedInsets(boardVariant);
 
   return {
-    left: frameRect.x - ROLLING_PAPER_FRAME_DIMENSIONS.blockedPadding,
-    top: frameRect.y - ROLLING_PAPER_FRAME_DIMENSIONS.blockedPadding,
-    right: frameRect.x + frameRect.width + ROLLING_PAPER_FRAME_DIMENSIONS.blockedPadding,
-    bottom: frameRect.y + frameRect.height + ROLLING_PAPER_FRAME_DIMENSIONS.blockedPadding,
+    left: frameRect.x + blockedInsets.left,
+    top: frameRect.y + blockedInsets.top,
+    right: frameRect.x + frameRect.width - blockedInsets.right,
+    bottom: frameRect.y + frameRect.height - blockedInsets.bottom,
   };
 }
 

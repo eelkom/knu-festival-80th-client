@@ -53,7 +53,7 @@ export default function RollingPaperWriteModal({
     selectedPlacement,
     colorId,
     occupiedNotes,
-    boardVariant,
+    frameVariant,
     undefined,
     ROLLING_PAPER_CLIENT_COLLISION_SCALE,
   );
@@ -149,7 +149,6 @@ export default function RollingPaperWriteModal({
           />
         ) : (
           <RollingPaperWritePlaceStep
-            boardVariant={boardVariant}
             frameVariant={frameVariant}
             colorId={colorId}
             message={trimmedMessage}

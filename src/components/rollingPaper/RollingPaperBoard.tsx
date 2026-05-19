@@ -44,10 +44,12 @@ import {
   POSTIT_POSITION_CONFLICT_CODE,
   POSTIT_POSITION_CONFLICT_MESSAGE,
   POSTIT_POSITION_CONFLICT_PLACEHOLDER_MESSAGE,
+  ROLLING_PAPER_BOARD_FULL_TOAST_STATE,
 } from './rollingPaperBoardConstants';
 import {
   getInitialRollingPaperPlacedNotes,
   isExpiredLocalRollingPaperNote,
+  isRollingPaperBoardFullError,
   isRollingPaperNoteInChannel,
   isSameRollingPaperConflictPlaceholder,
 } from './rollingPaperBoardUtils';
@@ -199,14 +201,14 @@ export default function RollingPaperBoard({ categoryId, channelId }: RollingPape
           { x: note.x, y: note.y },
           note.colorId,
           apiNotesForBoard,
-          note.boardVariant,
+          categoryFrameVariant,
           undefined,
           ROLLING_PAPER_CLIENT_COLLISION_SCALE,
         );
 
         return !isAlreadyVisibleFromApi;
       }),
-    [apiPlacedNotes, approvedPostitIds, boardId, pendingPlacedNotes],
+    [apiPlacedNotes, approvedPostitIds, boardId, categoryFrameVariant, pendingPlacedNotes],
   );
   const placedNotes = useMemo(
     () => (mockNotes.length > 0 ? mockNotes : [...apiPlacedNotes, ...visiblePendingNotes]),
@@ -260,15 +262,39 @@ export default function RollingPaperBoard({ categoryId, channelId }: RollingPape
     navigate(getRollingPaperBoardPath(category.id, nextChannel.id));
   };
 
+  const redirectToChannelSelectWithBoardFullToast = async () => {
+    setPlacementErrorMessage(null);
+    setIsWriteModalOpen(false);
+
+    if (boardId) {
+      await queryClient.refetchQueries({ queryKey: ['rollingPaper', 'postits', boardId] });
+    }
+
+    if (isApiRoute) {
+      await queryClient.invalidateQueries({ queryKey: ['rollingPaper', 'boards', questionId] });
+    }
+
+    navigate(`/rolling-paper/categories/${category.id}/channels`, {
+      replace: true,
+      state: { rollingPaperToast: ROLLING_PAPER_BOARD_FULL_TOAST_STATE },
+    });
+  };
+
   const handlePlaceNote = async (note: PlacedRollingPaperNote) => {
     setPlacementErrorMessage(null);
 
-    if (!boardId || currentBoardNotes.length >= boardCapacity) {
+    if (!boardId) {
+      return;
+    }
+
+    if (currentBoardNotes.length >= boardCapacity) {
+      await redirectToChannelSelectWithBoardFullToast();
       return;
     }
 
     const latestBoardNotes = await getLatestBoardNotesForPlacement();
     if (latestBoardNotes.length >= boardCapacity) {
+      await redirectToChannelSelectWithBoardFullToast();
       return;
     }
 
@@ -276,7 +302,7 @@ export default function RollingPaperBoard({ categoryId, channelId }: RollingPape
       { x: note.x, y: note.y },
       note.colorId,
       latestBoardNotes,
-      boardIndex,
+      categoryFrameVariant,
       undefined,
       ROLLING_PAPER_CLIENT_COLLISION_SCALE,
     );
@@ -329,6 +355,11 @@ export default function RollingPaperBoard({ categoryId, channelId }: RollingPape
         setPlacementErrorMessage(POSTIT_POSITION_CONFLICT_MESSAGE);
         await queryClient.refetchQueries({ queryKey: ['rollingPaper', 'postits', boardId] });
         await queryClient.invalidateQueries({ queryKey: ['rollingPaper', 'boards', questionId] });
+        return;
+      }
+
+      if (isRollingPaperBoardFullError(error)) {
+        await redirectToChannelSelectWithBoardFullToast();
         return;
       }
 

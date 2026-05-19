@@ -1,11 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { rollingPaperApi } from '@/apis';
 import RollingPaperCategoryTabs from '@/components/rollingPaper/RollingPaperCategoryTabs';
 import RollingPaperChannelCard from '@/components/rollingPaper/RollingPaperChannelCard';
 import RollingPaperPageTransition from '@/components/rollingPaper/RollingPaperPageTransition';
 import RollingPaperTabs from '@/components/rollingPaper/RollingPaperTabs';
+import RollingPaperToast from '@/components/rollingPaper/RollingPaperToast';
 import {
   rollingPaperItemMotion,
   rollingPaperStaggerContainerMotion,
@@ -15,6 +17,11 @@ import {
   toRollingPaperChannel,
 } from '@/components/rollingPaper/rollingPaperApiAdapter';
 import {
+  ROLLING_PAPER_BOARD_FULL_TOAST_DURATION_MS,
+  ROLLING_PAPER_BOARD_FULL_TOAST_MESSAGE,
+  ROLLING_PAPER_BOARD_FULL_TOAST_STATE,
+} from '@/components/rollingPaper/rollingPaperBoardConstants';
+import {
   getRollingPaperBoardPath,
   ROLLING_PAPER_CATEGORIES,
   ROLLING_PAPER_CHANNELS_PER_CATEGORY,
@@ -23,6 +30,13 @@ import {
 export default function RollingPaperChannelSelectPage() {
   const { categoryId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const initialToastMessage =
+    (location.state as { rollingPaperToast?: string } | null)?.rollingPaperToast ===
+    ROLLING_PAPER_BOARD_FULL_TOAST_STATE
+      ? ROLLING_PAPER_BOARD_FULL_TOAST_MESSAGE
+      : null;
+  const [toastMessage, setToastMessage] = useState<string | null>(initialToastMessage);
   const questionId = Number(categoryId);
   const isValidQuestionId = Number.isFinite(questionId);
   const questionsQuery = useQuery({
@@ -45,12 +59,36 @@ export default function RollingPaperChannelSelectPage() {
     .map(toRollingPaperChannel)
     .slice(0, ROLLING_PAPER_CHANNELS_PER_CATEGORY);
 
+  useEffect(() => {
+    const state = location.state as { rollingPaperToast?: string } | null;
+
+    if (state?.rollingPaperToast !== ROLLING_PAPER_BOARD_FULL_TOAST_STATE) {
+      return;
+    }
+
+    navigate(`${location.pathname}${location.search}`, { replace: true, state: null });
+  }, [location.pathname, location.search, location.state, navigate]);
+
+  useEffect(() => {
+    if (!toastMessage) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(
+      () => setToastMessage(null),
+      ROLLING_PAPER_BOARD_FULL_TOAST_DURATION_MS,
+    );
+
+    return () => window.clearTimeout(timeoutId);
+  }, [toastMessage]);
+
   if (!isValidQuestionId && categories[0]) {
     return <Navigate to={`/rolling-paper/categories/${categories[0].id}/channels`} replace />;
   }
 
   return (
     <>
+      {toastMessage && <RollingPaperToast message={toastMessage} />}
       <RollingPaperTabs active="board" />
       <RollingPaperPageTransition className="min-h-[calc(100dvh-64px)] bg-white">
         <RollingPaperCategoryTabs
