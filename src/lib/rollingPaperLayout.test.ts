@@ -273,34 +273,34 @@ describe('rollingPaperLayout', () => {
 
   it('uses tighter blocked rectangles for each mascot frame variant', () => {
     expect(getRollingPaperBlockedFrameRect(0)).toEqual({
-      left: 297,
-      top: 283,
-      right: 552,
-      bottom: 564,
+      left: 295,
+      top: 281,
+      right: 554,
+      bottom: 566,
     });
     expect(getRollingPaperBlockedFrameRect(1)).toEqual({
-      left: 308,
-      top: 298,
-      right: 557,
-      bottom: 554,
+      left: 306,
+      top: 296,
+      right: 559,
+      bottom: 556,
     });
     expect(getRollingPaperBlockedFrameRect(2)).toEqual({
-      left: 279,
-      top: 302,
-      right: 574,
-      bottom: 558,
+      left: 271,
+      top: 294,
+      right: 582,
+      bottom: 566,
     });
     expect(getRollingPaperBlockedFrameRect(3)).toEqual({
-      left: 342,
-      top: 297,
-      right: 511,
-      bottom: 559,
+      left: 340,
+      top: 295,
+      right: 513,
+      bottom: 561,
     });
     expect(getRollingPaperBlockedFrameRect(4)).toEqual({
-      left: 301,
-      top: 294,
-      right: 557,
-      bottom: 556,
+      left: 299,
+      top: 292,
+      right: 559,
+      bottom: 558,
     });
   });
 });
