@@ -1,4 +1,3 @@
-import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 import { useTwoShot } from '@/hooks/useTwoShot';
 import { TwoShotCompositingStep } from '@/components/hobanustagram/TwoShotCompositingStep';
 import { TwoShotPreviewStep } from '@/components/hobanustagram/TwoShotPreviewStep';
@@ -12,7 +11,6 @@ export interface TwoShotOverlayProps {
 }
 
 export const TwoShotOverlay = ({ onClose, onComplete }: TwoShotOverlayProps) => {
-  useBodyScrollLock();
   const {
     step,
     setStep,

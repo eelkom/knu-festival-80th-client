@@ -5,6 +5,11 @@ export const useDrawerState = (initialOpenSections: string[]) => {
   const initialActiveSection = initialOpenSections[0] ?? '';
   const [activeSection, setActiveSection] = useState<string | null>(initialActiveSection);
 
+  const expandSection = (id: string) => {
+    setOpenSections((prev) => new Set(prev).add(id));
+    setActiveSection(id);
+  };
+
   const toggleSection = (id: string) => {
     setOpenSections((prev) => {
       const next = new Set(prev);
@@ -15,5 +20,5 @@ export const useDrawerState = (initialOpenSections: string[]) => {
     setActiveSection(id);
   };
 
-  return { openSections, activeSection, toggleSection };
+  return { openSections, activeSection, expandSection, toggleSection };
 };

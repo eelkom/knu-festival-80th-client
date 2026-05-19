@@ -10,7 +10,8 @@ import { NavLeafItem } from './NavLeafItem';
 import knu80thLogo from '@/assets/logo/knu80th_logo_dark.webp';
 
 export const NavigationDrawer = ({ isOpen, onClose }: NavigationDrawerProps) => {
-  const { openSections, activeSection, toggleSection } = useDrawerState(ALL_SECTION_IDS);
+  const { openSections, activeSection, expandSection, toggleSection } =
+    useDrawerState(ALL_SECTION_IDS);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : '';
@@ -31,7 +32,7 @@ export const NavigationDrawer = ({ isOpen, onClose }: NavigationDrawerProps) => 
   return (
     <>
       <div
-        className={`fixed inset-0 z-55 bg-black/40 transition-opacity duration-300 md:left-[max(0px,calc(50%-300px))] md:right-[max(0px,calc(50%-300px))] ${
+        className={`fixed inset-0 z-55 bg-black/40 transition-opacity duration-[400ms] md:left-[max(0px,calc(50%-300px))] md:right-[max(0px,calc(50%-300px))] ${
           isOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={onClose}
@@ -39,7 +40,7 @@ export const NavigationDrawer = ({ isOpen, onClose }: NavigationDrawerProps) => 
 
       <div className="pointer-events-none fixed inset-0 z-60 overflow-hidden md:left-[max(0px,calc(50%-300px))] md:right-[max(0px,calc(50%-300px))]">
         <div
-          className={`pointer-events-auto absolute inset-0 flex flex-col transition-transform duration-300 ease-in-out ${
+          className={`pointer-events-auto absolute inset-0 flex flex-col transition-transform duration-[400ms] ease-in-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
           style={{
@@ -83,6 +84,7 @@ export const NavigationDrawer = ({ isOpen, onClose }: NavigationDrawerProps) => 
                       item={item}
                       isExpanded={openSections.has(item.id)}
                       isActive={activeSection === item.id}
+                      onExpand={() => expandSection(item.id)}
                       onToggle={() => toggleSection(item.id)}
                       onClose={onClose}
                     />
@@ -92,6 +94,7 @@ export const NavigationDrawer = ({ isOpen, onClose }: NavigationDrawerProps) => 
               return (
                 <motion.div
                   key={item.id}
+                  layout
                   variants={{
                     hidden: { opacity: 0, y: 8 },
                     visible: { opacity: 1, y: 0, transition: { duration: 0.2, ease: 'easeOut' } },
