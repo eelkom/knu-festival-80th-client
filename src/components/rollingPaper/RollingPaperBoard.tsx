@@ -201,14 +201,14 @@ export default function RollingPaperBoard({ categoryId, channelId }: RollingPape
           { x: note.x, y: note.y },
           note.colorId,
           apiNotesForBoard,
-          note.boardVariant,
+          categoryFrameVariant,
           undefined,
           ROLLING_PAPER_CLIENT_COLLISION_SCALE,
         );
 
         return !isAlreadyVisibleFromApi;
       }),
-    [apiPlacedNotes, approvedPostitIds, boardId, pendingPlacedNotes],
+    [apiPlacedNotes, approvedPostitIds, boardId, categoryFrameVariant, pendingPlacedNotes],
   );
   const placedNotes = useMemo(
     () => (mockNotes.length > 0 ? mockNotes : [...apiPlacedNotes, ...visiblePendingNotes]),
@@ -302,7 +302,7 @@ export default function RollingPaperBoard({ categoryId, channelId }: RollingPape
       { x: note.x, y: note.y },
       note.colorId,
       latestBoardNotes,
-      boardIndex,
+      categoryFrameVariant,
       undefined,
       ROLLING_PAPER_CLIENT_COLLISION_SCALE,
     );

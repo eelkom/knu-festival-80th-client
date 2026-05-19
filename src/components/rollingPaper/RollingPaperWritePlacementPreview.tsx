@@ -35,7 +35,6 @@ type PinchGestureSnapshot = {
 };
 
 type RollingPaperWritePlacementPreviewProps = {
-  boardVariant: number;
   frameVariant: number;
   colorId: RollingPaperStickerColorId;
   message: string;
@@ -67,7 +66,6 @@ function getMidpoint(firstPoint: PointerSnapshot, secondPoint: PointerSnapshot) 
 }
 
 export default function RollingPaperWritePlacementPreview({
-  boardVariant,
   frameVariant,
   colorId,
   message,
@@ -84,8 +82,8 @@ export default function RollingPaperWritePlacementPreview({
   const boardRef = useRef<HTMLDivElement>(null);
   const activePointersRef = useRef(new Map<number, PointerSnapshot>());
   const pinchGestureRef = useRef<PinchGestureSnapshot | null>(null);
-  const frameRect = getRollingPaperFrameRect(boardVariant);
-  const blockedFrameRect = getRollingPaperBlockedFrameRect(boardVariant);
+  const frameRect = getRollingPaperFrameRect(frameVariant);
+  const blockedFrameRect = getRollingPaperBlockedFrameRect(frameVariant);
   const frameImage =
     rollingPaperBoardFrames[frameVariant % rollingPaperBoardFrames.length] ??
     rollingPaperBoardFrames[0];

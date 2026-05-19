@@ -205,7 +205,6 @@ export default function CanvasAdminPage() {
 
           {selectedBoard ? (
             <BoardPreviewCanvas
-              board={selectedBoard}
               frameVariant={selectedBoardFrameVariant}
               postits={postits}
               loading={postitsQuery.isLoading}
@@ -461,7 +460,6 @@ function BoardsListCard({
 }
 
 interface BoardPreviewCanvasProps {
-  board: CanvasBoardSummaryResponse;
   frameVariant: number;
   postits: CanvasPostitResponse[];
   loading: boolean;
@@ -470,18 +468,16 @@ interface BoardPreviewCanvasProps {
 }
 
 function BoardPreviewCanvas({
-  board,
   frameVariant,
   postits,
   loading,
   error,
   onClickPostit,
 }: BoardPreviewCanvasProps) {
-  const variant = board.boardVariant % rollingPaperBoardFrames.length;
   const frameImage =
     rollingPaperBoardFrames[frameVariant % rollingPaperBoardFrames.length] ??
     rollingPaperBoardFrames[0];
-  const frameRect = getRollingPaperFrameRect(variant);
+  const frameRect = getRollingPaperFrameRect(frameVariant);
   const { width: canvasW, height: canvasH } = ROLLING_PAPER_CANVAS_DIMENSIONS;
 
   return (
