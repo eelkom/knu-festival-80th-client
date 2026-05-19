@@ -19,6 +19,7 @@ type IntroOverviewProps = {
 };
 
 const MAP_PREVIEW_OBJECT_POSITION = '20% 70%';
+const CONTACT_OPEN_CHAT_URL = 'https://open.kakao.com/o/gsMt0Evi';
 const GUIDE_CARD_BACKGROUND_OVERLAY =
   'linear-gradient(132.09deg, #ffffff 34.45%, rgba(255, 255, 255, 0) 100%)';
 
@@ -104,13 +105,15 @@ export default function IntroOverview({ onTabChange }: IntroOverviewProps) {
         <h2 className="text-[18px] font-bold leading-[1.4] tracking-[-0.36px]">
           궁금한 점 간편하게 문의하기
         </h2>
-        <button
-          type="button"
+        <a
+          href={CONTACT_OPEN_CHAT_URL}
+          target="_blank"
+          rel="noreferrer"
           className="flex w-fit items-center gap-1.5 rounded-full border border-black py-2.5 pl-5 pr-3.5 text-[14px] font-medium leading-none"
         >
           간편 문의하기
           <FiArrowRight size={24} />
-        </button>
+        </a>
       </motion.section>
     </>
   );

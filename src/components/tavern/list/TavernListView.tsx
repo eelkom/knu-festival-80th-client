@@ -21,6 +21,13 @@ export default function TavernListView({
   onSelectTavern,
   onSortChange,
 }: TavernListViewProps) {
+  const handleSortChange = (key: TavernSortKey) => {
+    if (key === sortKey) return;
+
+    onMenuToggle(null);
+    onSortChange(key);
+  };
+
   return (
     <section className="flex flex-col gap-3 px-5 py-6">
       <motion.h1
@@ -31,7 +38,7 @@ export default function TavernListView({
       >
         주막 목록
       </motion.h1>
-      <TavernSortTabs sortKey={sortKey} onSortChange={onSortChange} />
+      <TavernSortTabs sortKey={sortKey} onSortChange={handleSortChange} />
       <motion.div
         key={sortKey}
         initial="hidden"
@@ -124,9 +131,15 @@ function TavernSortTabs({
           <button
             key={option.key}
             type="button"
-            className={`h-10 min-w-0 flex-1 rounded-[8px] px-2 text-center text-[16px] leading-6 tracking-[-0.32px] ${
+            aria-pressed={selected}
+            className={`h-10 min-w-0 flex-1 touch-manipulation select-none rounded-[8px] px-2 text-center text-[16px] leading-6 tracking-[-0.32px] ${
               selected ? 'bg-white font-semibold text-[#ff3d3d]' : 'font-normal text-[#808080]'
             }`}
+            onPointerUp={(event) => {
+              if (event.pointerType === 'mouse') return;
+              event.preventDefault();
+              onSortChange(option.key);
+            }}
             onClick={() => onSortChange(option.key)}
           >
             {option.label}
