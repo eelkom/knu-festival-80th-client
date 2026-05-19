@@ -23,17 +23,23 @@ export default function RollingPaperIntro() {
       </section>
       <RollingPaperPageTransition className="bg-white">
         <section className="flex flex-col gap-12 px-5 pt-16 pb-12">
-          <motion.div className="flex flex-col gap-5" {...rollingPaperItemMotion}>
-            <div className="flex flex-col gap-1.5">
-              <p className="font-wanted-sans text-body1 font-bold leading-[1.4] tracking-[-0.02em] text-black">
+          <motion.div className="flex flex-col gap-7" {...rollingPaperItemMotion}>
+            <div className="flex flex-col gap-2.5">
+              <p className="font-wanted-sans text-body1 font-bold leading-[1.5] tracking-[-0.02em] text-black">
                 Rolling Paper
               </p>
               <h2 className="font-wanted-sans text-[18px] font-semibold leading-[1.4] tracking-[-0.02em] text-black">
                 함께 만드는 80년의 기억
               </h2>
-              <p className="font-wanted-sans text-body1 font-medium leading-[1.4] tracking-[-0.02em] text-black/50">
-                수천 명이 동시에 하나의 가상 도화지에 메시지를 남깁니다. 당신의 글과 그림이
-                실시간으로 다른 사람들의 것과 어우러져 하나의 거대한 작품이 됩니다.
+              <p className="whitespace-pre-line font-wanted-sans text-body1 font-medium leading-[1.5] tracking-[-0.02em] text-black/50">
+                {
+                  '축제의 순간을 짧은 메시지로 남겨보세요.\n모두의 기록이 하나의 롤링페이퍼에 모입니다.'
+                }
+              </p>
+              <p className="whitespace-pre-line font-wanted-sans text-sm font-medium leading-[1.5] tracking-[-0.02em] text-black/35">
+                {
+                  '카테고리와 보드를 선택해 메시지를 남겨보세요.\n작성한 메시지는 보드 위 원하는 곳에 배치할 수 있어요.'
+                }
               </p>
             </div>
             <Link

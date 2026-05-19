@@ -1,6 +1,5 @@
 import {
   useEffect,
-  useCallback,
   useRef,
   useState,
   type CSSProperties,
@@ -10,7 +9,6 @@ import {
 import { FiCircle, FiMinus, FiPlus } from 'react-icons/fi';
 
 import hobanuStampMarker from '@/assets/images/hobanu.webp';
-import tavernMapMidDetailImage from '@/assets/images/map-mid-detail.webp';
 import tavernMapImage from '@/assets/images/map.svg';
 import {
   festivalMap,
@@ -29,8 +27,6 @@ const MAP_MIN_SCALE = 0.1;
 const MAP_DEFAULT_SCALE = 0.6;
 const MAP_MAX_SCALE = 1;
 const MAP_FOCUS_SCALE = 1;
-const MAP_MID_DETAIL_MAX_SCALE = 0.5;
-const MAP_DETAIL_RESTORE_DELAY_MS = 160;
 const MAP_ZOOM_STEP = 0.15;
 const INITIAL_MAP_PAN = { x: 500, y: 350 };
 const DEFAULT_MARKER_SIZE = { width: 30, height: 30 };
@@ -87,8 +83,6 @@ type MapPoint = {
   y: number;
 };
 
-type MapDetailMode = 'mid' | 'high';
-
 type PinchState = {
   distance: number;
   center: MapPoint;
@@ -99,11 +93,6 @@ type PinchState = {
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
 const clampScale = (scale: number) => clamp(scale, MAP_MIN_SCALE, MAP_MAX_SCALE);
-
-const getMapDetailMode = (scale: number, gestureActive: boolean): MapDetailMode => {
-  if (gestureActive || scale <= MAP_MID_DETAIL_MAX_SCALE) return 'mid';
-  return 'high';
-};
 
 const getViewportRatio = (viewportSize: number) => viewportSize / MAP_BASE_VIEWPORT_SIZE;
 
@@ -226,8 +215,6 @@ export default function CampusMap({
 }: CampusMapProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
   const mapLayerRef = useRef<HTMLDivElement>(null);
-  const midDetailImageRef = useRef<HTMLImageElement>(null);
-  const highDetailImageRef = useRef<HTMLImageElement>(null);
   const [viewportSize, setViewportSize] = useState(MAP_BASE_VIEWPORT_SIZE);
   const [mapScale, setMapScale] = useState(MAP_DEFAULT_SCALE);
   const [mapPan, setMapPan] = useState(getScaledInitialMapPan(MAP_BASE_VIEWPORT_SIZE));
@@ -238,57 +225,11 @@ export default function CampusMap({
   const skipMarkerClickRef = useRef(false);
   const scaleRef = useRef(MAP_DEFAULT_SCALE);
   const panRef = useRef(getScaledInitialMapPan(MAP_BASE_VIEWPORT_SIZE));
-  const detailModeRef = useRef<MapDetailMode>('high');
-  const gestureDetailActiveRef = useRef(false);
-  const detailRestoreTimerRef = useRef<number | null>(null);
   const selectedTavernRef = useRef<Tavern | null>(selectedTavern);
 
-  const syncMapDetailMode = useCallback((scale: number, gestureActive = false) => {
-    const nextMode = getMapDetailMode(scale, gestureActive);
-    if (nextMode === detailModeRef.current) return;
-
-    const toggleImage = (image: HTMLImageElement | null, visible: boolean) => {
-      image?.classList.toggle('hidden', !visible);
-      image?.classList.toggle('block', visible);
-    };
-
-    detailModeRef.current = nextMode;
-    toggleImage(midDetailImageRef.current, nextMode === 'mid');
-    toggleImage(highDetailImageRef.current, nextMode === 'high');
-  }, []);
-
-  const clearDetailRestoreTimer = useCallback(() => {
-    if (detailRestoreTimerRef.current === null) return;
-
-    window.clearTimeout(detailRestoreTimerRef.current);
-    detailRestoreTimerRef.current = null;
-  }, []);
-
-  const setGestureDetailActive = useCallback(
-    (active: boolean, restoreDelay = MAP_DETAIL_RESTORE_DELAY_MS) => {
-      clearDetailRestoreTimer();
-      gestureDetailActiveRef.current = active;
-      setIsGestureActive(active);
-
-      if (active) {
-        syncMapDetailMode(scaleRef.current, true);
-        return;
-      }
-
-      detailRestoreTimerRef.current = window.setTimeout(() => {
-        detailRestoreTimerRef.current = null;
-        syncMapDetailMode(scaleRef.current, false);
-      }, restoreDelay);
-    },
-    [clearDetailRestoreTimer, syncMapDetailMode],
-  );
-
-  useEffect(
-    () => () => {
-      clearDetailRestoreTimer();
-    },
-    [clearDetailRestoreTimer],
-  );
+  const setGestureActive = (active: boolean) => {
+    setIsGestureActive(active);
+  };
 
   useEffect(() => {
     const viewport = viewportRef.current;
@@ -308,7 +249,6 @@ export default function CampusMap({
         setViewportSize(nextSize);
         scaleRef.current = focusScale;
         panRef.current = focusPan;
-        syncMapDetailMode(focusScale, gestureDetailActiveRef.current);
         setMapScale(focusScale);
         setMapPan(focusPan);
         return;
@@ -318,7 +258,6 @@ export default function CampusMap({
       setViewportSize(nextSize);
       scaleRef.current = MAP_DEFAULT_SCALE;
       panRef.current = nextPan;
-      syncMapDetailMode(MAP_DEFAULT_SCALE, gestureDetailActiveRef.current);
       setMapScale(MAP_DEFAULT_SCALE);
       setMapPan(nextPan);
     };
@@ -329,7 +268,7 @@ export default function CampusMap({
     resizeObserver.observe(viewport);
 
     return () => resizeObserver.disconnect();
-  }, [focusSelected, syncMapDetailMode]);
+  }, [focusSelected]);
 
   useEffect(() => {
     selectedTavernRef.current = selectedTavern;
@@ -346,13 +285,12 @@ export default function CampusMap({
 
       scaleRef.current = focusScale;
       panRef.current = focusPan;
-      syncMapDetailMode(focusScale, gestureDetailActiveRef.current);
       setMapScale(focusScale);
       setMapPan(focusPan);
     });
 
     return () => window.cancelAnimationFrame(animationFrame);
-  }, [focusSelected, selectedTavern, viewportSize, syncMapDetailMode]);
+  }, [focusSelected, selectedTavern, viewportSize]);
 
   const commitMapViewport = () => {
     setMapScale(scaleRef.current);
@@ -369,7 +307,6 @@ export default function CampusMap({
 
     scaleRef.current = clampedScale;
     panRef.current = clampedPan;
-    syncMapDetailMode(clampedScale, gestureDetailActiveRef.current);
     if (mapLayerRef.current) {
       mapLayerRef.current.style.transform = getMapTransform(clampedScale, clampedPan);
     }
@@ -384,7 +321,7 @@ export default function CampusMap({
 
     event.currentTarget.setPointerCapture(event.pointerId);
     pointerMapRef.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
-    setGestureDetailActive(true);
+    setGestureActive(true);
 
     const points = Array.from(pointerMapRef.current.values());
     if (points.length === 1) {
@@ -460,7 +397,7 @@ export default function CampusMap({
       lastDragPointRef.current = null;
       pinchStateRef.current = null;
       commitMapViewport();
-      setGestureDetailActive(false);
+      setGestureActive(false);
       return;
     }
 
@@ -487,7 +424,7 @@ export default function CampusMap({
 
     const nextScale = clampScale(MAP_FOCUS_SCALE);
     const nextPan = getFocusedMapPan(tavern, nextScale, viewportSize);
-    setGestureDetailActive(false, 0);
+    setGestureActive(false);
     applyMapViewport(nextScale, nextPan);
   };
 
@@ -495,7 +432,7 @@ export default function CampusMap({
     pointerMapRef.current.clear();
     lastDragPointRef.current = null;
     pinchStateRef.current = null;
-    setGestureDetailActive(false, 0);
+    setGestureActive(false);
   };
 
   const handleMarkerPointerDown = (event: PointerEvent<HTMLButtonElement>, tavern: Tavern) => {
@@ -543,16 +480,6 @@ export default function CampusMap({
           }}
         >
           <img
-            ref={midDetailImageRef}
-            src={tavernMapMidDetailImage}
-            alt="대동제 주막 지도"
-            className="pointer-events-none absolute hidden h-auto max-w-none select-none"
-            style={mapImageStyle}
-            decoding="async"
-            draggable={false}
-          />
-          <img
-            ref={highDetailImageRef}
             src={tavernMapImage}
             alt="대동제 주막 지도"
             fetchPriority="high"
