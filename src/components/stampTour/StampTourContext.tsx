@@ -76,37 +76,32 @@ const StampTourContext = () => {
             </h2>
           </div>
           <ul className="flex flex-col gap-4">
-            {STAMP_TOUR_PRIZES.map(({ rank, name, imgSrc }) => (
+            {STAMP_TOUR_PRIZES.map(({ name, imgSrc }) => (
               <li
-                key={rank}
-                className="flex h-[180px] items-end justify-center gap-[30px] rounded-lg bg-[rgba(255,61,61,0.03)] px-[30px] py-5"
+                key={name}
+                className="relative flex h-[180px] items-center justify-center gap-[30px] overflow-hidden rounded-xl px-[30px] py-5"
+                style={{
+                  background:
+                    'linear-gradient(120deg, rgba(255,61,61,0.05) 0%, #ffffff 40%, rgba(255,61,61,0.10) 100%)',
+                }}
               >
-                <div className="flex shrink-0 flex-col items-center justify-between self-stretch py-2.5">
-                  <div className="flex w-full flex-col items-center">
-                    <div className="-mb-[5px] h-[37px] w-[80px] shrink-0">
-                      <img
-                        src={prizeStars}
-                        alt=""
-                        aria-hidden
-                        loading="lazy"
-                        className="pointer-events-none size-full object-bottom"
-                      />
-                    </div>
-                    <p className="font-wanted-sans text-[16px] font-bold leading-none tracking-tight text-[#da131c] whitespace-nowrap">
-                      {rank}
-                    </p>
-                  </div>
-                  <div className="flex flex-[1_0_0] flex-col justify-center">
-                    <p className="text-center font-wanted-sans text-[20px] font-bold leading-none tracking-tight text-ink whitespace-pre-line">
-                      {name}
-                    </p>
-                  </div>
+                <div className="flex w-[100px] shrink-0 flex-col items-center gap-2">
+                  <img
+                    src={prizeStars}
+                    alt=""
+                    aria-hidden
+                    loading="lazy"
+                    className="pointer-events-none h-[37px] w-[80px] object-bottom"
+                  />
+                  <p className="text-center font-wanted-sans text-[20px] font-bold leading-none tracking-tight text-ink whitespace-nowrap">
+                    {name}
+                  </p>
                 </div>
                 <img
                   src={imgSrc}
                   alt={name.replace('\n', ' ')}
                   loading="lazy"
-                  className="shrink-0 size-[156px] object-contain"
+                  className="size-[156px] shrink-0 object-contain"
                 />
               </li>
             ))}

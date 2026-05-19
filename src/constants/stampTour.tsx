@@ -1,4 +1,3 @@
-import prize1 from '@/assets/stampTour/prize_1.webp';
 import prize2 from '@/assets/stampTour/prize_2.webp';
 import prize3 from '@/assets/stampTour/prize_3.webp';
 import step1Bg from '@/assets/stampTour/step_1_bg.webp';
@@ -71,15 +70,13 @@ export const STAMP_TOUR_STEPS: StampTourStep[] = [
 ];
 
 export type StampTourPrize = {
-  rank: string;
   name: string;
   imgSrc: string;
 };
 
 export const STAMP_TOUR_PRIZES: StampTourPrize[] = [
-  { rank: '1위', name: '애플워치', imgSrc: prize1 },
-  { rank: '2위', name: '보조배터리', imgSrc: prize2 },
-  { rank: '3위', name: '휴대용 선풍기', imgSrc: prize3 },
+  { name: '보조배터리', imgSrc: prize2 },
+  { name: '휴대용 선풍기', imgSrc: prize3 },
 ];
 
 export type Booth = {

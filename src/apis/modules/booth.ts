@@ -1,6 +1,5 @@
 import { ENDPOINTS, http, omitUndefined, unwrapApiResponse, unwrapVoidApiResponse } from '@/apis';
 import type { ApiResponse } from '@/apis/types';
-import { getMockBooth, getMockBooths } from '@/mocks/taverns';
 
 export type BoothSort = 'likes' | 'popular' | 'waiting-asc' | 'name-asc';
 
@@ -68,10 +67,6 @@ export interface BoothPasswordChangeRequest {
 }
 
 export async function listBooths(sort: BoothSort = 'likes'): Promise<BoothListItem[]> {
-  if (import.meta.env.DEV) {
-    return getMockBooths(sort);
-  }
-
   const response = await http.get<ApiResponse<BoothListItem[]>>(ENDPOINTS.booths.list, {
     params: { sort },
   });
@@ -84,12 +79,6 @@ export async function listMapBooths(): Promise<BoothMapItem[]> {
 }
 
 export async function getBooth(boothId: number): Promise<BoothListItem> {
-  if (import.meta.env.DEV) {
-    const booth = getMockBooth(boothId);
-    if (!booth) throw new Error('주막을 찾을 수 없습니다.');
-    return booth;
-  }
-
   const response = await http.get<ApiResponse<BoothListItem>>(ENDPOINTS.booths.detail(boothId));
   return unwrapApiResponse(response.data);
 }
