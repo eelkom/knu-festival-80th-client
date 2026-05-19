@@ -1,4 +1,6 @@
+import { motion } from 'framer-motion';
 import { FiArrowLeft, FiX } from 'react-icons/fi';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 type ReservationLimitModalProps = {
   onClose: () => void;
@@ -9,13 +11,17 @@ export default function ReservationLimitModal({
   onClose,
   onGoToReservationList,
 }: ReservationLimitModalProps) {
+  useBodyScrollLock();
   return (
     <div className="fixed inset-0 z-50 flex justify-center bg-black/30">
       <div className="relative min-h-dvh w-full max-w-[375px]">
-        <section
+        <motion.section
           role="dialog"
           aria-modal="true"
           aria-labelledby="reservation-limit-title"
+          initial={{ opacity: 0, scale: 0.95, y: 8 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
           className="absolute left-5 right-5 top-1/2 -translate-y-1/2 overflow-hidden rounded-[12px] bg-white pb-6 pt-4"
         >
           <div className="flex items-center justify-between px-4">
@@ -62,7 +68,7 @@ export default function ReservationLimitModal({
               예약 목록으로
             </button>
           </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   );

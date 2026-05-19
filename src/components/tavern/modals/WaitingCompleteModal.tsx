@@ -1,6 +1,8 @@
+import { motion } from 'framer-motion';
 import { FiChevronRight, FiX } from 'react-icons/fi';
 
 import type { WaitingReservation } from '@/components/tavern/types';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 type WaitingCompleteModalProps = {
   reservation: WaitingReservation;
@@ -8,15 +10,19 @@ type WaitingCompleteModalProps = {
 };
 
 export default function WaitingCompleteModal({ reservation, onClose }: WaitingCompleteModalProps) {
+  useBodyScrollLock();
   const { response } = reservation;
 
   return (
     <div className="fixed inset-0 z-50 flex justify-center bg-black/30">
       <div className="relative min-h-dvh w-full max-w-[375px]">
-        <section
+        <motion.section
           role="dialog"
           aria-modal="true"
           aria-labelledby="waiting-complete-title"
+          initial={{ opacity: 0, scale: 0.95, y: 8 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
           className="absolute left-5 right-5 top-1/2 -translate-y-1/2 overflow-hidden rounded-[12px] bg-white pb-6 pt-4"
         >
           <div className="flex items-center justify-between px-5">
@@ -82,7 +88,7 @@ export default function WaitingCompleteModal({ reservation, onClose }: WaitingCo
               10분 내 미방문 시 예약이 자동 취소됩니다.
             </p>
           </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   );

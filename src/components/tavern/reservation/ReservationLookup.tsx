@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FiChevronRight, FiX } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 
@@ -7,6 +7,7 @@ import { toApiClientError } from '@/apis/error';
 import FieldInput from '@/components/tavern/shared/FieldInput';
 import type { ReservationLookupResult } from '@/components/tavern/types';
 import { fadeUpVariant } from '@/constants/animation';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 export default function ReservationLookup() {
   const [reservationName, setReservationName] = useState('');
@@ -146,36 +147,46 @@ function ReservationResultList({
   onSelectReservation: (reservation: ReservationLookupResult) => void;
   onBack: () => void;
 }) {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
   if (reservations.length === 0) {
     return (
       <section className="flex flex-col gap-7 px-5 py-6">
-        <div className="flex flex-col gap-2.5">
+        <motion.div className="flex flex-col gap-2.5" {...fadeUpVariant}>
           <h1 className="text-[24px] font-bold leading-none tracking-[-0.48px]">예약 조회 결과</h1>
           <p className="text-[16px] font-normal leading-none tracking-[-0.32px] text-[#808080]">
             현재 대기 중인 예약이 없습니다.
           </p>
-        </div>
-        <button
+        </motion.div>
+        <motion.button
           type="button"
           className="h-[51px] w-full rounded-[8px] border border-[#e5e5e5] text-[16px] font-semibold tracking-[-0.32px]"
           onClick={onBack}
+          {...fadeUpVariant}
+          transition={{ ...fadeUpVariant.transition, delay: 0.1 }}
         >
           다시 조회하기
-        </button>
+        </motion.button>
       </section>
     );
   }
 
   return (
     <section className="flex flex-col gap-7 px-5 py-6">
-      <div className="flex flex-col gap-2.5">
+      <motion.div className="flex flex-col gap-2.5" {...fadeUpVariant}>
         <h1 className="text-[24px] font-bold leading-none tracking-[-0.48px]">예약 조회 결과</h1>
         <p className="text-[16px] font-normal leading-none tracking-[-0.32px] text-[#808080]">
           예약한 주막 정보입니다.
         </p>
-      </div>
+      </motion.div>
 
-      <div className="flex flex-col gap-2">
+      <motion.div
+        className="flex flex-col gap-2"
+        {...fadeUpVariant}
+        transition={{ ...fadeUpVariant.transition, delay: 0.1 }}
+      >
         {reservations.map((reservation) => (
           <button
             key={reservation.id}
@@ -200,15 +211,19 @@ function ReservationResultList({
             </div>
           </button>
         ))}
-      </div>
+      </motion.div>
 
-      <div className="rounded-[8px] bg-[#f9f9f9] p-4 text-[14px] font-medium leading-[1.5] tracking-[-0.28px] text-[#808080]">
+      <motion.div
+        className="rounded-[8px] bg-[#f9f9f9] p-4 text-[14px] font-medium leading-[1.5] tracking-[-0.28px] text-[#808080]"
+        {...fadeUpVariant}
+        transition={{ ...fadeUpVariant.transition, delay: 0.15 }}
+      >
         {reservations.length >= 3 && (
           <p className="text-[#f49800]">주막은 총 3곳까지만 예약 가능합니다.</p>
         )}
         <p>차례가 오면 문자로 알려드립니다.</p>
         <p>10분 내 미방문 시 예약이 자동 취소됩니다.</p>
-      </div>
+      </motion.div>
     </section>
   );
 }
@@ -224,6 +239,7 @@ function ReservationDetailModal({
   onCancelReservation: () => void;
   onClose: () => void;
 }) {
+  useBodyScrollLock();
   const [cancelling, setCancelling] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -246,10 +262,13 @@ function ReservationDetailModal({
   return (
     <div className="fixed inset-0 z-50 flex justify-center bg-black/30">
       <div className="relative min-h-dvh w-full max-w-[375px]">
-        <section
+        <motion.section
           role="dialog"
           aria-modal="true"
           aria-labelledby="reservation-detail-title"
+          initial={{ opacity: 0, scale: 0.95, y: 8 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
           className="absolute left-5 right-5 top-1/2 -translate-y-1/2 overflow-hidden rounded-[12px] bg-white pb-6 pt-4"
         >
           <div className="flex items-center justify-between px-5">
@@ -319,7 +338,7 @@ function ReservationDetailModal({
               {cancelling ? '취소 중...' : '예약 취소하기'}
             </button>
           </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   );

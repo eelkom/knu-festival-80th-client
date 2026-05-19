@@ -27,35 +27,19 @@ export default function TavernCard({
   onRegister,
   onSelect,
 }: TavernCardProps) {
-  const cardRef = useRef<HTMLElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const previousExpandedRef = useRef(expanded);
   const menuBoardSrc = resolveMenuBoardSrc(tavern.menuBoardImageUrl);
   const [contentHeight, setContentHeight] = useState(0);
 
   useEffect(() => {
     if (!contentRef.current) return;
-    const ro = new ResizeObserver(([entry]) => setContentHeight(entry.contentRect.height));
+    const ro = new ResizeObserver(([entry]) => {
+      const h = entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height;
+      setContentHeight(h);
+    });
     ro.observe(contentRef.current);
     return () => ro.disconnect();
   }, []);
-
-  useEffect(() => {
-    const wasExpanded = previousExpandedRef.current;
-    previousExpandedRef.current = expanded;
-
-    if (!expanded || wasExpanded) {
-      return;
-    }
-
-    requestAnimationFrame(() => {
-      (menuRef.current ?? cardRef.current)?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    });
-  }, [expanded]);
 
   const metaItems = [tavern.department].filter(Boolean);
 
@@ -86,10 +70,7 @@ export default function TavernCard({
   );
 
   return (
-    <article
-      ref={cardRef}
-      className="scroll-mt-28 overflow-hidden rounded-[12px] border border-[#e5e5e5] bg-white"
-    >
+    <article className="overflow-hidden rounded-[12px] border border-[#e5e5e5] bg-white">
       <div className="flex flex-col items-center gap-2.5 px-6 py-6">
         <div className="flex w-full flex-col gap-4">
           {onSelect ? (
@@ -117,14 +98,13 @@ export default function TavernCard({
         {menuBoardSrc && (
           <>
             <motion.div
-              ref={menuRef}
               animate={{ height: expanded ? contentHeight : 0, opacity: expanded ? 1 : 0 }}
               transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
               className="w-full scroll-mt-28 overflow-hidden"
             >
               <div
                 ref={contentRef}
-                className="flex flex-col gap-2.5 border-t border-[#e5e5e5] pt-5"
+                className="flex flex-col gap-2.5 border-t border-[#e5e5e5] pt-5 pb-1"
               >
                 <p className="text-[16px] font-medium leading-none tracking-[-0.32px] text-black/50">
                   메뉴판

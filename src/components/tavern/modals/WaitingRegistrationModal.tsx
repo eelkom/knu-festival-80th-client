@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { FiX } from 'react-icons/fi';
 
 import { registerWaiting } from '@/apis/modules/waiting';
@@ -7,6 +8,7 @@ import FieldInput from '@/components/tavern/shared/FieldInput';
 import type { WaitingReservation } from '@/components/tavern/types';
 import { LEGAL_LINKS } from '@/constants/legal';
 import type { Tavern } from '@/constants/taverns';
+import { useBodyScrollLock } from '@/hooks/useBodyScrollLock';
 
 type WaitingRegistrationModalProps = {
   tavern: Tavern;
@@ -26,6 +28,7 @@ export default function WaitingRegistrationModal({
   const [privacyAgreed, setPrivacyAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  useBodyScrollLock();
   const canSubmit =
     !loading &&
     name.trim().length > 0 &&
@@ -76,10 +79,13 @@ export default function WaitingRegistrationModal({
   return (
     <div className="fixed inset-0 z-50 flex justify-center overflow-y-auto bg-black/30">
       <div className="flex min-h-dvh w-full max-w-[375px] items-center px-5 py-8">
-        <section
+        <motion.section
           role="dialog"
           aria-modal="true"
           aria-labelledby="waiting-registration-title"
+          initial={{ opacity: 0, scale: 0.95, y: 8 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
           className="relative w-full overflow-hidden rounded-[12px] bg-white pb-6 pt-4"
         >
           <div className="flex items-center justify-between px-5">
@@ -171,7 +177,7 @@ export default function WaitingRegistrationModal({
               {loading ? '등록 중...' : '대기 등록하기'}
             </button>
           </form>
-        </section>
+        </motion.section>
       </div>
     </div>
   );
