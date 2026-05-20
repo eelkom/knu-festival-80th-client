@@ -2,19 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 
-import { boothApi, imagePathToSrc } from '@/apis';
+import { boothApi } from '@/apis';
 import CampusMap from '@/components/tavern/map/CampusMap';
 import { fadeUpVariant } from '@/constants/animation';
 import { mapBoothToTavern, type Tavern } from '@/constants/taverns';
+import { resolveMenuBoardSrc } from '@/lib/resolveMenuBoardSrc';
 
 type TavernDetailViewProps = {
   tavern: Tavern;
   onRegister: (tavern: Tavern) => void;
-};
-
-const resolveMenuBoardSrc = (src: string | null) => {
-  if (src?.startsWith('/src/') || src?.startsWith('/assets/')) return src;
-  return imagePathToSrc(src);
 };
 
 export default function TavernDetailView({ tavern, onRegister }: TavernDetailViewProps) {

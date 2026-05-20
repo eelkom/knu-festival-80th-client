@@ -4,6 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { boothApi } from '@/apis';
 import IntroOverview from '@/components/tavern/intro/IntroOverview';
+import { preloadImage } from '@/lib/preloadImage';
+import { resolveMenuBoardSrc } from '@/lib/resolveMenuBoardSrc';
 import TavernListView from '@/components/tavern/list/TavernListView';
 import MapOverview from '@/components/tavern/map/MapOverview';
 import ReservationLimitModal from '@/components/tavern/modals/ReservationLimitModal';
@@ -154,6 +156,11 @@ export default function TavernMapExperience() {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
   }, [activeTab, location.key]);
+
+  useEffect(() => {
+    const src = resolveMenuBoardSrc(selectedBoothQuery.data?.menuBoardImageUrl);
+    if (src) preloadImage(src);
+  }, [selectedBoothQuery.data]);
 
   const handleRegister = (tavern: Tavern) => {
     setSelectedTavern(tavern);

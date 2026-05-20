@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion';
 import { FiChevronDown } from 'react-icons/fi';
 
-import { imagePathToSrc } from '@/apis';
 import type { Tavern } from '@/constants/taverns';
+import { resolveMenuBoardSrc } from '@/lib/resolveMenuBoardSrc';
 
 type TavernCardProps = {
   expanded: boolean;
@@ -11,11 +11,6 @@ type TavernCardProps = {
   onMenuToggle: () => void;
   onRegister: () => void;
   onSelect?: () => void;
-};
-
-const resolveMenuBoardSrc = (src: string | null) => {
-  if (src?.startsWith('/src/') || src?.startsWith('/assets/')) return src;
-  return imagePathToSrc(src);
 };
 
 export default function TavernCard({

@@ -1,6 +1,9 @@
+import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import TavernCard from '@/components/tavern/list/TavernCard';
 import { tavernSortOptions, type Tavern, type TavernSortKey } from '@/constants/taverns';
+import { preloadImage } from '@/lib/preloadImage';
+import { resolveMenuBoardSrc } from '@/lib/resolveMenuBoardSrc';
 
 type TavernListViewProps = {
   expandedMenuId: string | null;
@@ -21,6 +24,13 @@ export default function TavernListView({
   onSelectTavern,
   onSortChange,
 }: TavernListViewProps) {
+  useEffect(() => {
+    for (const tavern of taverns) {
+      const src = resolveMenuBoardSrc(tavern.menuBoardImageUrl);
+      if (src) preloadImage(src);
+    }
+  }, [taverns]);
+
   const handleSortChange = (key: TavernSortKey) => {
     if (key === sortKey) return;
 
