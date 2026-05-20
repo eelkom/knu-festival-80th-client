@@ -256,10 +256,10 @@ export const PhotoboothTab = () => {
                 </div>
                 <div className="flex flex-col items-center gap-2">
                   <p className="font-wanted-sans text-[18px] font-semibold leading-none tracking-[-0.36px] text-black">
-                    호반우 필터 고르기
+                    호반우와 사진찍기
                   </p>
                   <p className="whitespace-pre-line text-center font-wanted-sans text-sm font-normal leading-[1.4] tracking-[-0.28px] text-gray">
-                    {'호반우 필터 2종 중, 마음에 드는 필터를 선택해\n사진을 완성하세요!'}
+                    {'호반우 필터 3종 중, 마음에 드는 필터를 선택해\n사진을 완성하세요!'}
                   </p>
                 </div>
               </button>
@@ -298,6 +298,13 @@ export const PhotoboothTab = () => {
                   <Download className="size-5 text-white" />
                   <span className="font-wanted-sans text-sm font-medium text-white">다운로드</span>
                 </button>
+              </div>
+              <div className="rounded-md bg-[#f9f9f9] p-4">
+                <p className="break-keep whitespace-pre-line font-wanted-sans text-body2 font-medium leading-normal tracking-tight text-gray">
+                  {
+                    '*인스타, 에타 앱 내의 브라우저는 정책상 사진 다운로드가 제한됩니다.\n*이 경우 Chrome이나 Safari 등 외부 브라우저로 다시 시도해주세요.'
+                  }
+                </p>
               </div>
             </motion.div>
           )}

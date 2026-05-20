@@ -56,7 +56,7 @@ export const SaveBrowserGuideModal = ({
               </h2>
               <p className="whitespace-pre-line font-wanted-sans text-sm leading-[1.5] tracking-[-0.28px] text-[#666]">
                 {
-                  '인스타, 에타 앱 등 내부 브라우저에서는\n사진 다운로드가 제한될 수 있어요.\n\n사진 저장이 되지 않는다면\nChrome이나 Safari 등의 외부 브라우저로\n다시 시도해주세요.'
+                  '인스타 앱, 에타 앱의 링크를 통해 접속 시\n사진 다운로드가 제한돼요.\n\n이 경우 \nChrome이나 Safari 등 외부 브라우저로\n시도해주세요.'
                 }
               </p>
             </div>

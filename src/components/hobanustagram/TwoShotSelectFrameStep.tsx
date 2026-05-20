@@ -26,9 +26,8 @@ export const TwoShotSelectFrameStep = ({
   const slots = TWO_SHOT_PHOTO_SLOTS[selectedFilter];
 
   return (
-    <div className="fixed inset-0 z-[39] flex justify-center bg-[#eceef3]">
+    <div className="fixed inset-0 z-60 flex justify-center bg-[#eceef3] pt-[env(safe-area-inset-top)]">
       <div className="relative flex h-full w-full max-w-[600px] flex-col bg-white">
-        <div className="shrink-0" style={{ height: 'min(100px, 12vh)' }} />
         <div className="shrink-0 px-5 pt-7 pb-5 text-center">
           <p className="font-wanted-sans text-xl font-bold tracking-[-0.4px] text-[#1a1a1a]">
             원하는 프레임을 선택해주세요
