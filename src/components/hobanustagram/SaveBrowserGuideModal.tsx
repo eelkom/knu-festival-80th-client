@@ -52,11 +52,11 @@ export const SaveBrowserGuideModal = ({
                 id="save-browser-guide-title"
                 className="font-wanted-sans text-[18px] font-bold leading-[1.4] tracking-[-0.36px] text-black"
               >
-                Chrome 또는 Safari를 권장해요
+                Chrome 등의 외부 브라우저를 권장해요
               </h2>
               <p className="whitespace-pre-line font-wanted-sans text-sm leading-[1.5] tracking-[-0.28px] text-[#666]">
                 {
-                  '인스타그램 앱 내부 브라우저에서는\n사진 다운로드가 제한될 수 있어요.\n\n사진 저장이 되지 않는다면 Chrome이나 Safari에서\n다시 접속해 주세요.'
+                  '인스타, 에타 앱 등 내부 브라우저에서는\n사진 다운로드가 제한될 수 있어요.\n\n사진 저장이 되지 않는다면\nChrome이나 Safari 등의 외부 브라우저로\n다시 시도해주세요.'
                 }
               </p>
             </div>
