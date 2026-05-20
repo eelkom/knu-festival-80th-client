@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiChevronDown } from 'react-icons/fi';
 
@@ -27,19 +26,7 @@ export default function TavernCard({
   onRegister,
   onSelect,
 }: TavernCardProps) {
-  const contentRef = useRef<HTMLDivElement>(null);
   const menuBoardSrc = resolveMenuBoardSrc(tavern.menuBoardImageUrl);
-  const [contentHeight, setContentHeight] = useState(0);
-
-  useEffect(() => {
-    if (!contentRef.current) return;
-    const ro = new ResizeObserver(([entry]) => {
-      const h = entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height;
-      setContentHeight(h);
-    });
-    ro.observe(contentRef.current);
-    return () => ro.disconnect();
-  }, []);
 
   const metaItems = [tavern.department].filter(Boolean);
 
@@ -98,14 +85,11 @@ export default function TavernCard({
         {menuBoardSrc && (
           <>
             <motion.div
-              animate={{ height: expanded ? contentHeight : 0, opacity: expanded ? 1 : 0 }}
+              animate={{ height: expanded ? 'auto' : 0, opacity: expanded ? 1 : 0 }}
               transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
               className="w-full scroll-mt-28 overflow-hidden"
             >
-              <div
-                ref={contentRef}
-                className="flex flex-col gap-2.5 border-t border-[#e5e5e5] pt-5 pb-1"
-              >
+              <div className="flex flex-col gap-2.5 border-t border-[#e5e5e5] pt-5 pb-1">
                 <p className="text-[16px] font-medium leading-none tracking-[-0.32px] text-black/50">
                   메뉴판
                 </p>

@@ -12,7 +12,7 @@ const CONFIG = {
   service: {
     imageSrc: errorServiceImg,
     imageClassName: '',
-    message: '서비스 점검 중이에요',
+    message: '일시적인 오류가 발생했어요\n페이지를 새로고침해 주세요',
   },
   network: {
     imageSrc: errorNetworkImg,

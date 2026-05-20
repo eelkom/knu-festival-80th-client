@@ -38,7 +38,7 @@ export default class ErrorBoundary extends Component<Props, State> {
       return (
         <ErrorFallback
           type={type}
-          onRetry={type === 'network' ? this.handleRetry : undefined}
+          onRetry={this.handleRetry}
           className={this.props.fallbackClassName}
         />
       );
