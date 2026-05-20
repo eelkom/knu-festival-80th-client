@@ -162,8 +162,14 @@ const InstatingApplyView = () => {
                 {...register('instagramId', {
                   required: '인스타 ID를 입력해주세요.',
                   pattern: {
-                    value: /^[a-zA-Z0-9_.]{1,30}$/,
+                    value: /^[a-zA-Z0-9_.]{3,30}$/,
                     message: '올바른 인스타그램 ID를 입력해주세요.',
+                  },
+                  validate: {
+                    noDotEdge: (v) =>
+                      !/^\.|\.$/u.test(v) || 'ID는 .으로 시작하거나 끝날 수 없습니다.',
+                    noConsecutiveDots: (v) =>
+                      !v.includes('..') || 'ID에 연속된 ..은 사용할 수 없습니다.',
                   },
                 })}
                 className="h-[50px] w-full rounded-md border border-border bg-surface px-4 font-wanted-sans text-body1 tracking-tight text-ink placeholder:text-text-disabled focus:border-sub-red focus:outline-none disabled:cursor-not-allowed"
@@ -190,8 +196,24 @@ const InstatingApplyView = () => {
                 {...register('phone', {
                   required: '연락처를 입력해주세요.',
                   pattern: {
-                    value: /^01[0-9]{8,9}$/,
+                    value: /^010\d{8}$/,
                     message: '올바른 연락처를 입력해주세요.',
+                  },
+                  validate: (v) => {
+                    const subscriber = v.slice(3);
+                    const first4 = subscriber.slice(0, 4);
+                    const last4 = subscriber.slice(4);
+                    if (/^(\d)\1{3}$/.test(first4) || /^(\d)\1{3}$/.test(last4))
+                      return '유효하지 않은 연락처입니다.';
+                    const isAscending = [...subscriber].every(
+                      (d, i, arr) => i === 0 || +d === +arr[i - 1] + 1,
+                    );
+                    if (isAscending) return '유효하지 않은 연락처입니다.';
+                    const isDescending = [...subscriber].every(
+                      (d, i, arr) => i === 0 || +d === +arr[i - 1] - 1,
+                    );
+                    if (isDescending) return '유효하지 않은 연락처입니다.';
+                    return true;
                   },
                 })}
                 className="h-[50px] w-full rounded-md border border-border bg-surface px-4 font-wanted-sans text-body1 tracking-tight text-ink placeholder:text-text-disabled focus:border-sub-red focus:outline-none disabled:cursor-not-allowed"
