@@ -13,7 +13,7 @@ import illustBooth from '@/assets/home/illust-booth.webp';
 import illustRolling from '@/assets/home/illust-rolling.webp';
 import illustInstaing from '@/assets/home/illust-instaing.webp';
 import illustPhotobooth from '@/assets/home/illust-photobooth.webp';
-import CountdownTimer from '@/components/home/CountdownTimer';
+import { QuickMenu } from '@/components/home/QuickMenu';
 import ContentCard from '@/components/home/ContentCard';
 import GlassCircleButton from '@/components/home/GlassCircleButton';
 import SectionBlock from '@/components/home/SectionBlock';
@@ -79,10 +79,8 @@ export default function HomePage() {
 
       <div className="pt-16 flex flex-col gap-32 bg-background">
         <div ref={countdownRef}>
-          <SectionBlock label="Count Down" title="축제까지 남은 시간">
-            <div className="px-5">
-              <CountdownTimer />
-            </div>
+          <SectionBlock label="Quick Menu" title="대동제 메뉴 바로가기">
+            <QuickMenu />
           </SectionBlock>
         </div>
 
