@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import PageLoader from '@/components/common/PageLoader';
 import { CameraOverlay } from '@/components/hobanustagram/CameraOverlay';
 import { LazyTwoShotOverlay } from '@/components/hobanustagram/LazyTwoShotOverlay';
+import { SaveBrowserGuideModal } from '@/components/hobanustagram/SaveBrowserGuideModal';
 import { SaveSheet } from '@/components/hobanustagram/SaveSheet';
 import { StepIndicator } from '@/components/hobanustagram/StepIndicator';
 import { CHARACTER_LIST } from '@/constants/hobanustagram';
@@ -20,6 +21,8 @@ import { downloadPhoto, sharePhoto } from '@/lib/savePhoto';
 import { useCamera } from '@/hooks/useCamera';
 import type { CameraState, CharacterKey, TabStep } from '@/types/hobanustagram';
 
+type PendingShootMode = 'two-shot' | 'character' | null;
+
 export const PhotoboothTab = () => {
   const [tabStep, setTabStep] = useState<TabStep>(1);
   const [cameraState, setCameraState] = useState<CameraState>('idle');
@@ -27,6 +30,9 @@ export const PhotoboothTab = () => {
   const [capturedDataUrl, setCapturedDataUrl] = useState<string | null>(null);
   const [showFrameSelector, setShowFrameSelector] = useState(false);
   const [showSaveSheet, setShowSaveSheet] = useState(false);
+  const [showBrowserGuide, setShowBrowserGuide] = useState(false);
+  const [browserGuideShown, setBrowserGuideShown] = useState(false);
+  const [pendingShootMode, setPendingShootMode] = useState<PendingShootMode>(null);
   const [twoShotActive, setTwoShotActive] = useState(false);
 
   const { videoRef, isReady, error, facingMode, startCamera, stopCamera, flipCamera } = useCamera();
@@ -45,14 +51,34 @@ export const PhotoboothTab = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cameraState]);
 
-  const handleOpenCamera = () => {
+  const openCameraMode = () => {
     preloadCharacterOverlays();
     setCameraState('shooting');
   };
 
-  const handleOpenTwoShot = () => {
+  const openTwoShotMode = () => {
     preloadTwoShotExperience();
     setTwoShotActive(true);
+  };
+
+  const runShootMode = (mode: Exclude<PendingShootMode, null>) => {
+    if (mode === 'two-shot') {
+      openTwoShotMode();
+      return;
+    }
+
+    openCameraMode();
+  };
+
+  const handleSelectShootMode = (mode: Exclude<PendingShootMode, null>) => {
+    if (!browserGuideShown) {
+      setPendingShootMode(mode);
+      setShowBrowserGuide(true);
+      setBrowserGuideShown(true);
+      return;
+    }
+
+    runShootMode(mode);
   };
 
   const handleShutter = () => {
@@ -101,13 +127,24 @@ export const PhotoboothTab = () => {
     });
   };
 
-  const handleSaveButtonClick = () => {
+  const runSaveFlow = () => {
     const testFile = new File([], 'test');
     if (navigator.canShare?.({ files: [testFile] })) {
       setShowSaveSheet(true);
     } else {
       if (capturedDataUrl) void downloadPhoto(capturedDataUrl);
     }
+  };
+
+  const handleSaveButtonClick = () => {
+    runSaveFlow();
+  };
+
+  const handleContinueAfterBrowserGuide = () => {
+    const nextMode = pendingShootMode;
+    setPendingShootMode(null);
+    setShowBrowserGuide(false);
+    if (nextMode) runShootMode(nextMode);
   };
 
   const handleDownload = async () => {
@@ -164,6 +201,11 @@ export const PhotoboothTab = () => {
         onDownload={() => void handleDownload()}
         onShare={() => void handleShare()}
       />
+      <SaveBrowserGuideModal
+        open={showBrowserGuide}
+        onClose={() => setShowBrowserGuide(false)}
+        onContinue={handleContinueAfterBrowserGuide}
+      />
 
       {!twoShotActive && (
         <div className="flex min-h-screen flex-col gap-7 bg-white px-5 py-7">
@@ -182,7 +224,7 @@ export const PhotoboothTab = () => {
 
               <button
                 type="button"
-                onClick={handleOpenTwoShot}
+                onClick={() => handleSelectShootMode('two-shot')}
                 onFocus={preloadTwoShotExperience}
                 onPointerEnter={preloadTwoShotExperience}
                 onTouchStart={preloadTwoShotExperience}
@@ -203,7 +245,7 @@ export const PhotoboothTab = () => {
 
               <button
                 type="button"
-                onClick={handleOpenCamera}
+                onClick={() => handleSelectShootMode('character')}
                 onFocus={preloadCharacterOverlays}
                 onPointerEnter={preloadCharacterOverlays}
                 onTouchStart={preloadCharacterOverlays}
