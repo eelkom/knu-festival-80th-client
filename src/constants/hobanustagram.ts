@@ -46,9 +46,9 @@ export const CHARACTER_LIST: {
 
 export const hobanustagramFaqItems: FaqItem[] = [
   {
-    question: 'Q1. 호반우스타그램이 무엇인가요?',
+    question: 'Q1. 호반우 인생두컷이 무엇인가요?',
     answer:
-      '호반우스타그램은 경북대학교 마스코트 호반우를 테마로 한 포토부스 이벤트입니다. 귀여운 호반우 프레임과 필터로 추억을 남겨보세요! 🐮',
+      '호반우 인생두컷은 경북대학교 마스코트 호반우를 테마로 한 포토부스 이벤트입니다. 귀여운 호반우 프레임과 필터로 추억을 남겨보세요! 🐮',
   },
   {
     question: 'Q2. 어떤 포토 기능을 이용할 수 있나요?',

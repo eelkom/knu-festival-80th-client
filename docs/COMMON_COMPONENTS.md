@@ -43,7 +43,7 @@ const [activeTab, setActiveTab] = useState<TopTab>('intro');
 - URL은 고정, 부모 컴포넌트가 `useState`로 현재 탭을 관리
 - 딥링크가 불필요하거나 URL 변경이 어색한 경우에 적합
 
-**사용 중인 곳**: 주막(TavernTabBar), 호반우스타그램(HobanustagramTabBar)
+**사용 중인 곳**: 주막(TavernTabBar), 호반우 인생두컷(HobanustagramTabBar)
 
 > **참고 — searchParams 방식**: URL은 유지하면서 딥링크가 필요하다면 `/tavern?tab=reservation` 형태의 쿼리 파라미터(`useSearchParams`)도 선택지다. controlled과 라우터 기반의 중간 지점으로, 현재는 사용하지 않는다.
 

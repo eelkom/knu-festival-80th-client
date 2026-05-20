@@ -4,7 +4,7 @@ export const NAV_LINKS = [
   { label: '지도 정보', to: '/map' },
   { label: '롤링페이퍼', to: '/rolling-paper' },
   { label: '인스타팅', to: '/instating' },
-  { label: '호반우스타그램', to: '/hobanustagram' },
+  { label: '호반우 인생두컷', to: '/hobanustagram' },
 ] as const;
 
 export const FOOTER_LINKS = [

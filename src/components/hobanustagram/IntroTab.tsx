@@ -15,7 +15,7 @@ export interface IntroTabProps {
 export const IntroTab = ({ onNavigateToPhotobooth, onPhotoboothIntent }: IntroTabProps) => {
   return (
     <>
-      <GradientBanner title="호반우스타그램" />
+      <GradientBanner title="호반우 인생두컷" />
 
       <motion.section className="flex flex-col gap-12 bg-white px-5 pb-12 pt-16" {...fadeUpVariant}>
         <div className="flex flex-col gap-5">

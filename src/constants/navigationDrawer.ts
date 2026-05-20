@@ -34,7 +34,7 @@ export const NAV_ITEMS: NavItem[] = [
     id: 'event',
     label: '이벤트',
     children: [
-      { label: '호반우스타그램', to: '/hobanustagram' },
+      { label: '호반우 인생두컷', to: '/hobanustagram' },
       { label: '대동제 스탬프 투어', to: '/stamptour' },
       { label: '축제 굿즈', to: '/goods' },
     ],

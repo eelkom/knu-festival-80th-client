@@ -19,7 +19,7 @@ export const HobanustagramTabBar = ({ activeTab, onTabChange }: HobanustagramTab
       onChange={(key) => onTabChange(key as HobanustagramTab)}
       layoutId="hobanustagram-tab"
       sticky
-      ariaLabel="호반우스타그램 메뉴"
+      ariaLabel="호반우 인생두컷 메뉴"
     />
   );
 };

@@ -101,7 +101,7 @@ module.exports = {
 
 | 분류          | 변경 내용                                                                                                                                                       | 효과                            |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------- |
-| Performance   | 롤링페이퍼 프레임·카테고리, 크레딧, 호반우스타그램, 지도·예약 아이콘 등 잔여 에셋 전체 WebP 변환                                                                | 이미지 총량 수십 MB 절감        |
+| Performance   | 롤링페이퍼 프레임·카테고리, 크레딧, 호반우 인생두컷, 지도·예약 아이콘 등 잔여 에셋 전체 WebP 변환                                                               | 이미지 총량 수십 MB 절감        |
 | Performance   | LCP 이미지에 `fetchPriority="high"` 적용 (CongratVideoPage heroBg, CampusMap 지도, IntroTab 포토부스)                                                           | LCP 개선                        |
 | Performance   | Pretendard CDN(`cdn.jsdelivr.net`)에 `<link rel="preconnect" crossorigin>` 추가                                                                                 | 렌더 블로킹 폰트 로드 지연 완화 |
 | Performance   | fold 아래 이미지에 `loading="lazy"` 적용 (TavernCard·TavernDetailView 메뉴판, CongratVideoPage about80th·발전기금, MemberCard 프로필, VideoCard YouTube 썸네일) | 초기 로드 개선                  |

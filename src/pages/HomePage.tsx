@@ -166,7 +166,7 @@ export default function HomePage() {
           <div className="px-5">
             <ContentCard
               category="Photo Booth"
-              title="호반우스타그램"
+              title="호반우 인생두컷"
               description="80주년 만의 카메라 필터로 특별한 추억 만들기"
               imageSrc={cardBg3}
               illustrationSrc={illustPhotobooth}
