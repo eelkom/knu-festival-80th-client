@@ -30,6 +30,7 @@ const ApplicantsNumberSection = () => {
 
   const maleCount = data?.malePendingCount ?? 0;
   const femaleCount = data?.femalePendingCount ?? 0;
+  const resultOpen = data?.resultOpen ?? false;
 
   return (
     <motion.div className="flex w-full flex-col gap-6 bg-white px-5 py-8" {...fadeUpVariant}>
@@ -38,7 +39,7 @@ const ApplicantsNumberSection = () => {
           Applicants
         </p>
         <p className="font-wanted-sans text-[18px] font-medium leading-[1.4] tracking-[-0.36px] text-ink">
-          현재 신청자 현황
+          {resultOpen ? '최종 신청자 현황' : '현재 신청자 현황'}
         </p>
       </div>
 
