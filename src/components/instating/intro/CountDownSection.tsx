@@ -41,6 +41,18 @@ const CountDownSection = () => {
     } else if (nextRegistrationOpenAt && nextRegistrationOpenAt > now) {
       label = '인스타팅 신청 오픈까지';
       deadline = nextRegistrationOpenAt;
+    } else if (data.resultOpen && !nextRegistrationOpenAt) {
+      const lastDay = data.festivalDays?.at(-1);
+      const serviceEndAt = lastDay ? new Date(`${lastDay}T11:00:00+09:00`) : null;
+      if (serviceEndAt) serviceEndAt.setDate(serviceEndAt.getDate() + 1);
+
+      if (serviceEndAt && serviceEndAt > now) {
+        label = '인스타팅 서비스 종료까지';
+        deadline = serviceEndAt;
+      } else {
+        label = '인스타팅 서비스가 종료되었습니다.';
+        deadline = new Date(0);
+      }
     } else {
       label = '인스타팅 서비스가 종료되었습니다.';
       deadline = new Date(0);

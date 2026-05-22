@@ -23,14 +23,45 @@ const ApplicantCard = ({ label, count, countColor, bgColor }: ApplicantCardProps
   </div>
 );
 
+const DAY1_MALE = 342;
+const DAY1_FEMALE = 278;
+const DAY2_MALE = 670;
+const DAY2_FEMALE = 532;
+// const DAY3_MALE = 0; // TODO: API 초기화 전에 day3 신청자 수를 확인하여 값 설정
+// const DAY3_FEMALE = 0; // TODO: API 초기화 전에 day3 신청자 수를 확인하여 값 설정
+// TODO: 내일 오전 11시(API 초기화) 전에 day3 신청자 수를 확인하여 DAY3_MALE, DAY3_FEMALE 상수를 추가하고 maleCount/femaleCount 합산에 반영할 것
+
 const ApplicantsNumberSection = () => {
   const { data, isError, refetch } = useMatchingStatus();
 
   if (isError) return <MatchingStatusFallback onRetry={refetch} className="py-8" />;
 
-  const maleCount = data?.malePendingCount ?? 0;
-  const femaleCount = data?.femalePendingCount ?? 0;
-  const resultOpen = data?.resultOpen ?? false;
+  const now = new Date();
+  const nextRegistrationOpenAt = data?.registrationOpenAt
+    ? new Date(data.registrationOpenAt)
+    : null;
+  const lastFestivalDay = data?.festivalDays?.at(-1);
+  const midnightAfterLastDay = lastFestivalDay
+    ? new Date(`${lastFestivalDay}T00:00:00+09:00`)
+    : null;
+  if (midnightAfterLastDay) midnightAfterLastDay.setDate(midnightAfterLastDay.getDate() + 1);
+  const serviceEnded =
+    !!data &&
+    !data.registrationOpen &&
+    (!nextRegistrationOpenAt || nextRegistrationOpenAt <= now) &&
+    !!midnightAfterLastDay &&
+    midnightAfterLastDay <= now;
+
+  const todayMale = data?.malePendingCount ?? 0;
+  const todayFemale = data?.femalePendingCount ?? 0;
+  const maleCount = serviceEnded ? DAY1_MALE + DAY2_MALE + todayMale : todayMale;
+  const femaleCount = serviceEnded ? DAY1_FEMALE + DAY2_FEMALE + todayFemale : todayFemale;
+
+  const subtitle = serviceEnded
+    ? '3일 총 신청자 현황'
+    : data?.resultOpen
+      ? '최종 신청자 현황'
+      : '현재 신청자 현황';
 
   return (
     <motion.div className="flex w-full flex-col gap-6 bg-white px-5 py-8" {...fadeUpVariant}>
@@ -39,7 +70,7 @@ const ApplicantsNumberSection = () => {
           Applicants
         </p>
         <p className="font-wanted-sans text-[18px] font-medium leading-[1.4] tracking-[-0.36px] text-ink">
-          {resultOpen ? '최종 신청자 현황' : '현재 신청자 현황'}
+          {subtitle}
         </p>
       </div>
 

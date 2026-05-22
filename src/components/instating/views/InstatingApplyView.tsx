@@ -267,7 +267,7 @@ const InstatingApplyView = () => {
                   : 'bg-[#CCCCCC]'
             }`}
           >
-            {!isRegistrationOpen ? (
+            {!isRegistrationOpen && registrationOpenAt ? (
               <CountdownText deadline={registrationOpenAt} />
             ) : isSubmitting ? (
               '신청 중...'
