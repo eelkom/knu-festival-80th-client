@@ -177,7 +177,7 @@ const InstatingResultView = () => {
           {...fadeUpVariant}
           transition={{ ...fadeUpVariant.transition, delay: 0.15 }}
         >
-          {!isResultOpen && resultOpenAt ? (
+          {!isResultOpen && resultOpenAt && resultOpenAt > new Date() ? (
             <CountdownText deadline={resultOpenAt} />
           ) : isSubmitting ? (
             '조회 중...'

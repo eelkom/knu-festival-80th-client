@@ -27,9 +27,8 @@ const DAY1_MALE = 342;
 const DAY1_FEMALE = 278;
 const DAY2_MALE = 670;
 const DAY2_FEMALE = 532;
-// const DAY3_MALE = 0; // TODO: API 초기화 전에 day3 신청자 수를 확인하여 값 설정
-// const DAY3_FEMALE = 0; // TODO: API 초기화 전에 day3 신청자 수를 확인하여 값 설정
-// TODO: 내일 오전 11시(API 초기화) 전에 day3 신청자 수를 확인하여 DAY3_MALE, DAY3_FEMALE 상수를 추가하고 maleCount/femaleCount 합산에 반영할 것
+const DAY3_MALE = 690;
+const DAY3_FEMALE = 419;
 
 const ApplicantsNumberSection = () => {
   const { data, isError, refetch } = useMatchingStatus();
@@ -54,11 +53,11 @@ const ApplicantsNumberSection = () => {
 
   const todayMale = data?.malePendingCount ?? 0;
   const todayFemale = data?.femalePendingCount ?? 0;
-  const maleCount = serviceEnded ? DAY1_MALE + DAY2_MALE + todayMale : todayMale;
-  const femaleCount = serviceEnded ? DAY1_FEMALE + DAY2_FEMALE + todayFemale : todayFemale;
+  const maleCount = serviceEnded ? DAY1_MALE + DAY2_MALE + DAY3_MALE : todayMale;
+  const femaleCount = serviceEnded ? DAY1_FEMALE + DAY2_FEMALE + DAY3_FEMALE : todayFemale;
 
   const subtitle = serviceEnded
-    ? '3일 총 신청자 현황'
+    ? `3일간 총 신청자 현황 (총 ${maleCount + femaleCount}명)`
     : data?.resultOpen
       ? '최종 신청자 현황'
       : '현재 신청자 현황';
