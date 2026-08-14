@@ -1,5 +1,3 @@
-import { useMatchingStatus } from '@/hooks/instating/useMatchingStatus';
-import MatchingStatusFallback from '@/components/instating/MatchingStatusFallback';
 import { fadeUpVariant } from '@/constants/animation';
 import { motion } from 'framer-motion';
 
@@ -23,44 +21,14 @@ const ApplicantCard = ({ label, count, countColor, bgColor }: ApplicantCardProps
   </div>
 );
 
-const DAY1_MALE = 342;
-const DAY1_FEMALE = 278;
-const DAY2_MALE = 670;
-const DAY2_FEMALE = 532;
-const DAY3_MALE = 690;
-const DAY3_FEMALE = 419;
+// 축제 종료 후 서버 운영이 중단되어 3일간 최종 신청자 수를 하드코딩한다.
+const TOTAL_MALE = 1702;
+const TOTAL_FEMALE = 1229;
 
 const ApplicantsNumberSection = () => {
-  const { data, isError, refetch } = useMatchingStatus();
-
-  if (isError) return <MatchingStatusFallback onRetry={refetch} className="py-8" />;
-
-  const now = new Date();
-  const nextRegistrationOpenAt = data?.registrationOpenAt
-    ? new Date(data.registrationOpenAt)
-    : null;
-  const lastFestivalDay = data?.festivalDays?.at(-1);
-  const midnightAfterLastDay = lastFestivalDay
-    ? new Date(`${lastFestivalDay}T00:00:00+09:00`)
-    : null;
-  if (midnightAfterLastDay) midnightAfterLastDay.setDate(midnightAfterLastDay.getDate() + 1);
-  const serviceEnded =
-    !!data &&
-    !data.registrationOpen &&
-    (!nextRegistrationOpenAt || nextRegistrationOpenAt <= now) &&
-    !!midnightAfterLastDay &&
-    midnightAfterLastDay <= now;
-
-  const todayMale = data?.malePendingCount ?? 0;
-  const todayFemale = data?.femalePendingCount ?? 0;
-  const maleCount = serviceEnded ? DAY1_MALE + DAY2_MALE + DAY3_MALE : todayMale;
-  const femaleCount = serviceEnded ? DAY1_FEMALE + DAY2_FEMALE + DAY3_FEMALE : todayFemale;
-
-  const subtitle = serviceEnded
-    ? `3일간 총 신청자 현황 (총 ${maleCount + femaleCount}명)`
-    : data?.resultOpen
-      ? '최종 신청자 현황'
-      : '현재 신청자 현황';
+  const maleCount = TOTAL_MALE;
+  const femaleCount = TOTAL_FEMALE;
+  const subtitle = `3일간 총 신청자 현황 (총 ${maleCount + femaleCount}명)`;
 
   return (
     <motion.div className="flex w-full flex-col gap-6 bg-white px-5 py-8" {...fadeUpVariant}>
