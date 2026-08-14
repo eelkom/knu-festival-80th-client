@@ -64,7 +64,9 @@ viewport.amount: 0.1    → 뷰포트에 조금만 걸려도 즉시 트리거
 
 **신청자 현황 (`ApplicantsNumberSection`)**
 
-`useMatchingStatus`에서 `malePendingCount`, `femalePendingCount`를 읽어 표시한다. 30초 폴링으로 갱신한다. 정밀한 실시간성이 필요하지 않아 SSE를 도입하지 않았다.
+축제 종료 후 서버 운영이 중단되어, 3일간 최종 신청자 수(남성 1702명 / 여성 1229명)를 컴포넌트 상수로 하드코딩해 표시한다. `useMatchingStatus` 의존을 제거했으므로 API 상태와 무관하게 항상 동일한 값이 렌더된다.
+
+운영 중에는 `useMatchingStatus`에서 `malePendingCount`, `femalePendingCount`를 읽어 30초 폴링으로 갱신했다. 정밀한 실시간성이 필요하지 않아 SSE는 도입하지 않았다.
 
 ### 신청 폼 (`InstatingApplyView`)
 
@@ -253,7 +255,7 @@ InstatingPage
 
 ### 섹션 레벨 Fallback (MatchingStatusFallback)
 
-`CountDownSection`과 `ApplicantsNumberSection`은 `useMatchingStatus` API가 실패(`isError`)하면 각자 `MatchingStatusFallback`을 렌더한다. `InstatingContent`(정적 콘텐츠)는 API와 무관하므로 영향 없이 렌더된다.
+`CountDownSection`은 `useMatchingStatus` API가 실패(`isError`)하면 `MatchingStatusFallback`을 렌더한다. `ApplicantsNumberSection`은 신청자 수 하드코딩 이후 API에 의존하지 않으므로 fallback이 없다. `InstatingContent`(정적 콘텐츠)는 API와 무관하므로 영향 없이 렌더된다.
 
 **isLoading 처리를 별도로 두지 않은 이유**: `staleTime: 10s` 설정으로 재방문 시 캐시에서 즉시 반환되고, 첫 로드 시만 짧게(수백 ms) 보인다. 이 시간 동안 기본값(`00:00:00:00`, `0명`)이 표시되는 게 스켈레톤이나 별도 로딩 UI보다 자연스럽다고 판단했다.
 
