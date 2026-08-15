@@ -37,6 +37,19 @@
 그 외         → '결과를 확인하세요.'       + 카운트다운 없음
 ```
 
+> **현재: 서비스 종료 상태 고정**
+>
+> 제80대 대동제 종료 후 instating 서버 운영이 중단되어, 사용자 화면에서 `useMatchingStatus` 의존을 모두 제거하고 종료 상태로 고정했다. 위 상태 전이 로직은 다음 축제 복구를 위한 참고용으로 남겨둔다.
+>
+> - `CountDownSection` — `인스타팅 서비스가 종료되었습니다.` 문구 + `00:00:00:00` 고정
+> - `ApplicantsNumberSection` — 3일간 최종 신청자 수(남 1702명 / 여 1229명) 하드코딩
+> - `InstatingApplyView` — 폼 전체 비활성 + `인스타팅 신청이 마감되었습니다` 고정
+> - `InstatingResultView` — 폼 전체 비활성 + `결과 조회가 종료되었습니다` 고정
+>
+> 결과적으로 사용자 화면에서는 `matchings/status` 요청이 전혀 발생하지 않는다. 관리자 콘솔(`MatchingOverviewPage`)은 별도 쿼리(`admin/matchings/status`)를 사용하므로 영향받지 않는다.
+>
+> 복구 시에는 각 컴포넌트에서 제거한 `useMatchingStatus` 연동을 되돌리면 된다. 폼 유효성 검사와 제출 핸들러(`registerMatching`, `getMatchingResult`)는 그대로 남아 있다.
+
 ## 핵심 기능
 
 ### 인트로 뷰
@@ -76,9 +89,9 @@ viewport.amount: 0.1    → 뷰포트에 조금만 걸려도 즉시 트리거
 
 제출 성공 시 `InstatingApplySuccessModal`을 띄운다. 이 모달에는 입력한 정보 요약과 함께 결과 공개까지 남은 카운트다운이 표시된다.
 
-`registrationOpen: false`이면 `fieldset disabled`로 모든 입력 필드를 비활성화하고, 버튼에 `CountdownText` 컴포넌트로 신청 시작까지 남은 시간을 표시한다. 목표 시간은 `useMatchingStatus`의 `registrationOpenAt` 필드를 사용한다.
+**현재는 상시 마감 상태로 고정되어 있다.** `fieldset disabled`로 모든 입력 필드를 비활성화하고, 제출 버튼은 `disabled` + 검은 배경 + `인스타팅 신청이 마감되었습니다` 라벨로 렌더한다. 하단 안내 문구도 축제 종료 안내로 교체했다.
 
-`useQueryInvalidateAtDeadline(registrationOpenAt, isRegistrationOpen, queryKey)`을 호출해 deadline 도달 시점에 즉시 `matchings/status` 캐시를 무효화한다. 30초 폴링만 의존하면 deadline 이후 최대 30초간 버튼이 타이머 상태로 남는 문제를 방지한다.
+운영 중에는 `registrationOpen: false`일 때 동일하게 `fieldset disabled` 처리를 하고, 버튼에 `CountdownText`로 신청 시작까지 남은 시간(`registrationOpenAt`)을 표시했다. 또한 `useQueryInvalidateAtDeadline(registrationOpenAt, isRegistrationOpen, queryKey)`으로 deadline 도달 즉시 `matchings/status` 캐시를 무효화해, 30초 폴링만 의존할 때 최대 30초간 버튼이 타이머 상태로 남는 문제를 방지했다.
 
 에러 처리:
 
@@ -92,11 +105,11 @@ viewport.amount: 0.1    → 뷰포트에 조금만 걸려도 즉시 트리거
 
 인스타 ID와 연락처를 입력해 인증한다. 제출 성공 시 `InstatingResultModal`을 띄운다.
 
-`resultOpen: false`이면 `fieldset disabled`로 모든 입력 필드를 비활성화하고, 버튼에 `useCountdown`으로 결과 공개까지 남은 시간을 표시한다. API 성공 응답 이후에도 `resultOpen: false`이면 "아직 결과 공개 전입니다." 인라인 메시지를 표시한다.
+**현재는 상시 종료 상태로 고정되어 있다.** 신청 폼과 동일하게 `fieldset disabled` + `disabled` 제출 버튼(`결과 조회가 종료되었습니다`)으로 렌더하고, 하단에 서비스 종료 안내 문구를 추가했다.
 
-신청 폼과 동일하게 `useQueryInvalidateAtDeadline(resultOpenAt, isResultOpen, queryKey)`을 사용해 deadline 도달 즉시 캐시를 무효화한다.
+운영 중에는 `resultOpen: false`일 때 `fieldset disabled` 처리를 하고 버튼에 `useCountdown`으로 결과 공개까지 남은 시간을 표시했다. API 성공 응답 이후에도 `resultOpen: false`이면 "아직 결과 공개 전입니다." 인라인 메시지를 표시한다. 신청 폼과 동일하게 `useQueryInvalidateAtDeadline(resultOpenAt, isResultOpen, queryKey)`으로 deadline 도달 즉시 캐시를 무효화했다.
 
-제출 버튼 활성 여부는 `formState.isValid`를 사용한다. `useWatch`로 필드 값을 직접 구독하면 키 입력마다 전체 컴포넌트가 리렌더되므로, 유효성이 실제로 변할 때만 리렌더를 유발하는 `formState.isValid`로 대체했다. 필드별 유효성 검사 실패 메시지는 `formState.errors`로 표시한다.
+운영 중 제출 버튼 활성 여부는 `formState.isValid`를 사용했다. `useWatch`로 필드 값을 직접 구독하면 키 입력마다 전체 컴포넌트가 리렌더되므로, 유효성이 실제로 변할 때만 리렌더를 유발하는 `formState.isValid`로 대체했다. 필드별 유효성 검사 실패 메시지는 `formState.errors`로 표시한다.
 
 **페이지 진입 모션**: 두 폼 뷰 모두 헤더 → fieldset → 버튼 순서로 `fadeUpVariant`를 staggered 적용한다(0s → 0.1s → 0.15s 딜레이). 신청 폼은 하단 notice까지 0.2s 딜레이로 추가된다. 인트로 뷰 섹션들과 동일한 패턴이다.
 
@@ -255,13 +268,17 @@ InstatingPage
 
 ### 섹션 레벨 Fallback (MatchingStatusFallback)
 
-`CountDownSection`은 `useMatchingStatus` API가 실패(`isError`)하면 `MatchingStatusFallback`을 렌더한다. `ApplicantsNumberSection`은 신청자 수 하드코딩 이후 API에 의존하지 않으므로 fallback이 없다. `InstatingContent`(정적 콘텐츠)는 API와 무관하므로 영향 없이 렌더된다.
+**현재 이 fallback은 사용되지 않는다.** 인트로 두 섹션 모두 `useMatchingStatus` 의존이 제거되어 실패할 API 호출 자체가 없다. `MatchingStatusFallback` 컴포넌트는 복구 시 재사용을 위해 파일만 남겨둔 상태다(`useQueryInvalidateAtDeadline`, `CountdownText`도 동일).
+
+운영 중에는 `CountDownSection`과 `ApplicantsNumberSection`이 `useMatchingStatus` API 실패(`isError`) 시 각자 `MatchingStatusFallback`(이미지 + 새로 고침 버튼)을 렌더했다. `InstatingContent`(정적 콘텐츠)는 API와 무관하므로 영향 없이 렌더된다.
 
 **isLoading 처리를 별도로 두지 않은 이유**: `staleTime: 10s` 설정으로 재방문 시 캐시에서 즉시 반환되고, 첫 로드 시만 짧게(수백 ms) 보인다. 이 시간 동안 기본값(`00:00:00:00`, `0명`)이 표시되는 게 스켈레톤이나 별도 로딩 UI보다 자연스럽다고 판단했다.
 
 **섹션 레벨을 선택한 이유**: API 실패 시에도 `InstatingContent`(스텝 카드, 신청 버튼)는 의미 있는 정보를 제공한다. 페이지 전체를 대체하면 실질적으로 유효한 콘텐츠까지 가려지므로 섹션 단위로 처리한다.
 
-**Apply/Result 뷰에서 별도 처리가 불필요한 이유**: `isRegistrationOpen`과 `isResultOpen` 기본값이 `true`라서 API 실패 시 폼이 활성화된 상태로 렌더된다. 잘못된 시간에 제출해도 서버에서 거부(403, 결과 미공개)하므로 클라이언트 추가 처리가 불필요하다.
+**Apply/Result 뷰에서 별도 처리를 두지 않았던 이유**: `isRegistrationOpen`과 `isResultOpen` 기본값이 `true`라서 API 실패 시 폼이 활성화된 상태로 렌더됐다. 잘못된 시간에 제출해도 서버가 거부(403, 결과 미공개)하므로 클라이언트 추가 처리가 불필요하다는 판단이었다.
+
+다만 **서버 운영이 완전히 중단된 상황에서는 이 기본값이 문제**가 됐다. 폼과 버튼이 정상 활성 상태로 보이고, 사용자가 정보를 다 입력해 제출한 뒤에야 실패 메시지를 만나게 된다. 그래서 두 뷰 모두 종료 상태로 고정했다.
 
 ## 보안 및 어뷰징 방지
 
