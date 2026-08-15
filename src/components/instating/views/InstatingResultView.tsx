@@ -5,10 +5,11 @@ import AlertModal from '@/components/instating/AlertModal';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ApiClientError, matchingApi } from '@/apis';
-import { useMatchingStatus } from '@/hooks/instating/useMatchingStatus';
-import CountdownText from '@/components/instating/CountdownText';
-import { useQueryInvalidateAtDeadline } from '@/hooks/instating/useQueryInvalidateAtDeadline';
 import { fadeUpVariant } from '@/constants/animation';
+
+// 축제 종료 후 서버 운영이 중단되어 결과 조회를 상시 종료 상태로 고정한다.
+// 조회 로직(유효성 검사, 제출 핸들러)은 다음 축제 복구를 위해 그대로 둔다.
+const RESULT_CLOSED_LABEL = '결과 조회가 종료되었습니다';
 
 type FormValues = {
   instagramId: string;
@@ -19,18 +20,13 @@ const InstatingResultView = () => {
   const {
     register,
     handleSubmit,
-    formState: { isValid, isSubmitting, errors },
+    formState: { errors },
   } = useForm<FormValues>({ mode: 'onChange' });
 
   const [result, setResult] = useState<MatchResult | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [errorModal, setErrorModal] = useState<{ title: string; description: string } | null>(null);
 
-  const { data: status } = useMatchingStatus();
-  const isResultOpen = status?.resultOpen ?? true;
-  const resultOpenAt = status?.resultOpenAt ? new Date(status.resultOpenAt) : null;
-
-  useQueryInvalidateAtDeadline(resultOpenAt, isResultOpen, ['matchings', 'status']);
   const navigate = useNavigate();
 
   const onSubmit = async ({ instagramId, phone }: FormValues) => {
@@ -101,7 +97,7 @@ const InstatingResultView = () => {
         </motion.div>
 
         <motion.fieldset
-          disabled={!isResultOpen}
+          disabled
           className="m-0 flex flex-col gap-[18px] border-0 p-0"
           {...fadeUpVariant}
           transition={{ ...fadeUpVariant.transition, delay: 0.1 }}
@@ -170,21 +166,26 @@ const InstatingResultView = () => {
         {/* Submit */}
         <motion.button
           type="submit"
-          disabled={!isResultOpen || !isValid || isSubmitting}
-          className={`h-[50px] w-full rounded-md font-wanted-sans text-body1 font-medium tracking-tight text-surface ${
-            !isResultOpen ? 'bg-black' : isValid && !isSubmitting ? 'bg-sub-red' : 'bg-[#CCCCCC]'
-          }`}
+          disabled
+          className="h-[50px] w-full rounded-md bg-black font-wanted-sans text-body1 font-medium tracking-tight text-surface"
           {...fadeUpVariant}
           transition={{ ...fadeUpVariant.transition, delay: 0.15 }}
         >
-          {!isResultOpen && resultOpenAt && resultOpenAt > new Date() ? (
-            <CountdownText deadline={resultOpenAt} />
-          ) : isSubmitting ? (
-            '조회 중...'
-          ) : (
-            '결과 조회하기'
-          )}
+          {RESULT_CLOSED_LABEL}
         </motion.button>
+
+        {/* Notice */}
+        <motion.div
+          className="rounded-md bg-[#f9f9f9] p-4"
+          {...fadeUpVariant}
+          transition={{ ...fadeUpVariant.transition, delay: 0.2 }}
+        >
+          <p className="font-wanted-sans text-body2 font-medium leading-[1.5] tracking-tight text-gray">
+            *제80대 대동제가 종료되어 매칭 결과 조회 서비스가 종료되었습니다.
+            <br />
+            *이용해 주신 모든 분들께 감사드립니다.
+          </p>
+        </motion.div>
       </form>
     </>
   );

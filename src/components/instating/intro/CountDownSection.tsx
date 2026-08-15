@@ -1,64 +1,12 @@
 import CountDownTimer from './CountDownTimer';
-import { useMatchingStatus } from '@/hooks/instating/useMatchingStatus';
-import MatchingStatusFallback from '@/components/instating/MatchingStatusFallback';
 import { fadeUpVariant } from '@/constants/animation';
 import { motion } from 'framer-motion';
 
+// 축제 종료 후 서버 운영이 중단되어 종료 상태로 고정한다.
+const SERVICE_ENDED_LABEL = '인스타팅 서비스가 종료되었습니다.';
+const ENDED_DEADLINE = new Date(0);
+
 const CountDownSection = () => {
-  const { data, isError, refetch } = useMatchingStatus();
-
-  if (isError) return <MatchingStatusFallback onRetry={refetch} className="pb-16 pt-8" />;
-
-  let label: string;
-  let deadline: Date;
-
-  if (!data) {
-    label = '';
-    deadline = new Date(0);
-  } else {
-    const now = new Date();
-    const firstFestivalStart = data.festivalDays[0]
-      ? new Date(`${data.festivalDays[0]}T11:00:00+09:00`)
-      : null;
-    const nextRegistrationOpenAt = data.registrationOpenAt
-      ? new Date(data.registrationOpenAt)
-      : null;
-
-    if (firstFestivalStart && now < firstFestivalStart) {
-      label = '인스타팅 서비스 오픈까지';
-      deadline = firstFestivalStart;
-    } else if (data.registrationOpen && data.registrationDeadline) {
-      label = '인스타팅 신청 마감까지';
-      deadline = new Date(data.registrationDeadline);
-    } else if (
-      !data.registrationOpen &&
-      !data.resultOpen &&
-      data.resultOpenAt &&
-      new Date(data.resultOpenAt) > now
-    ) {
-      label = '인스타팅 매칭 공개까지';
-      deadline = new Date(data.resultOpenAt);
-    } else if (nextRegistrationOpenAt && nextRegistrationOpenAt > now) {
-      label = '인스타팅 신청 오픈까지';
-      deadline = nextRegistrationOpenAt;
-    } else if (data.resultOpen && !nextRegistrationOpenAt) {
-      const lastDay = data.festivalDays?.at(-1);
-      const serviceEndAt = lastDay ? new Date(`${lastDay}T11:00:00+09:00`) : null;
-      if (serviceEndAt) serviceEndAt.setDate(serviceEndAt.getDate() + 1);
-
-      if (serviceEndAt && serviceEndAt > now) {
-        label = '인스타팅 서비스 종료까지';
-        deadline = serviceEndAt;
-      } else {
-        label = '인스타팅 서비스가 종료되었습니다.';
-        deadline = new Date(0);
-      }
-    } else {
-      label = '인스타팅 서비스가 종료되었습니다.';
-      deadline = new Date(0);
-    }
-  }
-
   return (
     <motion.div className="flex w-full flex-col gap-6 bg-white px-5 pb-16 pt-8" {...fadeUpVariant}>
       <div className="flex flex-col gap-1.5">
@@ -66,11 +14,11 @@ const CountDownSection = () => {
           Count Down
         </p>
         <p className="whitespace-pre-line font-wanted-sans text-[18px] font-medium leading-[1.4] tracking-[-0.36px] text-ink">
-          {label}
+          {SERVICE_ENDED_LABEL}
         </p>
       </div>
 
-      <CountDownTimer deadline={deadline} />
+      <CountDownTimer deadline={ENDED_DEADLINE} />
     </motion.div>
   );
 };

@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { useForm, useWatch, type UseFormRegisterReturn } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import { ApiClientError, matchingApi } from '@/apis';
-import { useMatchingStatus } from '@/hooks/instating/useMatchingStatus';
 import type { SubmittedData } from '../result/InstatingApplySuccessModal';
 import InstatingApplySuccessModal from '../result/InstatingApplySuccessModal';
 import AlertModal from '@/components/instating/AlertModal';
-import CountdownText from '@/components/instating/CountdownText';
-import { useQueryInvalidateAtDeadline } from '@/hooks/instating/useQueryInvalidateAtDeadline';
 import { fadeUpVariant } from '@/constants/animation';
 import { LEGAL_LINKS } from '@/constants/legal';
+
+// 축제 종료 후 서버 운영이 중단되어 신청을 상시 마감 상태로 고정한다.
+// 신청 로직(유효성 검사, 제출 핸들러)은 다음 축제 복구를 위해 그대로 둔다.
+const REGISTRATION_CLOSED_LABEL = '인스타팅 신청이 마감되었습니다';
 
 type FormValues = {
   gender: 'male' | 'female';
@@ -24,19 +25,11 @@ const InstatingApplyView = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [errorModal, setErrorModal] = useState<{ title: string; description: string } | null>(null);
 
-  const { data: status } = useMatchingStatus();
-  const isRegistrationOpen = status?.registrationOpen ?? true;
-  const registrationOpenAt = status?.registrationOpenAt
-    ? new Date(status.registrationOpenAt)
-    : null;
-
-  useQueryInvalidateAtDeadline(registrationOpenAt, isRegistrationOpen, ['matchings', 'status']);
-
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors },
   } = useForm<FormValues>({
     defaultValues: {
       gender: 'male',
@@ -104,7 +97,7 @@ const InstatingApplyView = () => {
         </motion.div>
 
         <motion.fieldset
-          disabled={!isRegistrationOpen}
+          disabled
           className="m-0 flex flex-col gap-6 border-0 p-0 disabled:opacity-40"
           {...fadeUpVariant}
           transition={{ ...fadeUpVariant.transition, delay: 0.1 }}
@@ -258,31 +251,18 @@ const InstatingApplyView = () => {
         >
           <button
             type="submit"
-            disabled={!isRegistrationOpen || !isValid || isSubmitting}
-            className={`h-[50px] w-full rounded-md font-wanted-sans text-body1 font-medium tracking-tight text-surface ${
-              !isRegistrationOpen
-                ? 'bg-black'
-                : isValid && !isSubmitting
-                  ? 'bg-sub-red'
-                  : 'bg-[#CCCCCC]'
-            }`}
+            disabled
+            className="h-[50px] w-full rounded-md bg-black font-wanted-sans text-body1 font-medium tracking-tight text-surface"
           >
-            {!isRegistrationOpen && registrationOpenAt ? (
-              <CountdownText deadline={registrationOpenAt} />
-            ) : isSubmitting ? (
-              '신청 중...'
-            ) : (
-              '인스타팅 신청하기'
-            )}
+            {REGISTRATION_CLOSED_LABEL}
           </button>
 
           {/* Notice */}
           <div className="flex flex-col gap-3 rounded-md bg-[#f9f9f9] p-4">
             <p className="font-wanted-sans text-body2 font-medium leading-[1.5] tracking-tight text-gray">
-              *신청 후 취소는 불가능하오니 신중하게 결정해 주세요.
+              *제80대 대동제가 종료되어 인스타팅 신청을 받지 않습니다.
               <br />
-              *본 서비스는 만 19세 이상의 성인(대학생)을 대상으로 합니다. 미성년자의 참여를 엄격히
-              금지하며, 허위 정보 입력으로 발생한 문제의 책임은 본인에게 있습니다.
+              *이미 신청하신 분들의 매칭 결과 조회도 함께 종료되었습니다.
             </p>
           </div>
         </motion.div>
