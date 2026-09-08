@@ -139,11 +139,11 @@ module.exports = {
 | Performance | 로컬 가변 폰트(1.29MB) 제거, wanted-sans 공식 CDN(jsdelivr, 굵기별·유니코드 범위별 분할 서브셋)로 교체 | 폰트 전송량 페이지당 60~80% 감소         |
 | Performance | Pretendard와 동일 호스트(`cdn.jsdelivr.net`) 사용으로 기존 `preconnect` 재사용                         | 추가 DNS·TCP·TLS 연결 비용 없음          |
 
-**남은 병목 (다음 과제)**
+**남은 병목**
 
-- `unused-javascript` 감사 기준 `/stamptour`의 JS 번들(380.5KB) 중 **210.3KB(55%)가 해당 페이지에서 미사용** — 라우트 단위 코드 스플리팅이 안 되어 있어 다른 페이지 코드까지 함께 로드됨
-- `render-blocking-insight`가 새로 추가된 굵기별 CSS 5개(각 150ms) + Pretendard CSS(775ms)를 렌더 블로킹으로 지목 (FCP 영향, LCP 영향은 없음) — 우선순위가 낮은 굵기(Medium·SemiBold)는 `preload` + `onload` 스왑으로 논블로킹 전환 검토
-- 홈(`/`) 상단 `step_1`~`step_3` 일러스트 3장이 각각 91~198KB(합 ~430KB)로 여전히 큼 — WebP 압축률 재검토 또는 `loading="lazy"` 대상 확대 검토
+- `unused-javascript` 감사 기준 `/stamptour`의 JS 번들(380.5KB) 중 210.3KB(55%)가 해당 페이지에서 미사용으로 잡힘. 다만 실제 네트워크 로그를 확인해보니 `App.tsx`는 모든 라우트를 `React.lazy()`로 감싸고 있고, `/stamptour` 방문 시 받는 라우트별 청크(`stampTour-*.js` 2.4KB, `StampTourIntroView-*.js` 1.5KB, `ProcessCard-*.js` 1.1KB 등)는 정상적으로 잘게 분리되어 있다. 380KB는 라우트 미분리가 아니라 모든 페이지가 공유하는 벤더 번들(React·Router·분석 SDK 등)이며, "미사용 55%"는 이 벤더 코드 중 현재 페이지에서 실행되지 않는 조건부 경로(분석 SDK 등)를 커버리지 도구가 잡은 것으로 보인다. 벤더 청크를 더 세분화할 여지는 있지만 우선순위 낮음.
+- `render-blocking-insight`가 새로 추가된 굵기별 CSS 5개(각 150ms) + Pretendard CSS(775ms)를 렌더 블로킹으로 지목. 다만 `metricSavings`가 `{ FCP: 950, LCP: 0 }`으로 명시되어 있어 LCP에는 영향이 없고, 병렬 요청 특성상 실제 절감은 표시된 합산치보다 작을 것으로 판단해 별도 조치는 보류.
+- 홈(`/`) 상단 `step_1`~`step_3` 일러스트 3장이 각각 91~198KB로 여전히 큼. `ProcessCard`에 `loading="lazy"`는 이미 적용되어 있어(뷰포트 밖으로 미룸) 초기 로드를 막지는 않으며, 남은 여지는 WebP 압축률 자체를 더 낮추는 것뿐.
 
 ## 주의사항
 
