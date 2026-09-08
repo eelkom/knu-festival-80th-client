@@ -78,13 +78,10 @@
   --radius-lg: 16px;
 }
 
-@font-face {
-  font-family: 'Wanted Sans';
-  src: url('/fonts/WantedSansVariable.woff2') format('woff2');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
+/*
+  Wanted Sans는 index.html에서 CDN 서브셋(굵기별 분리)으로 로드한다.
+  로컬 @font-face(변형 축 100~900, 1.29MB)는 제거했다. (#5)
+*/
 
 @layer base {
   :root {
