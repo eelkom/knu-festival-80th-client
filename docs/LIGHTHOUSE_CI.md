@@ -105,38 +105,39 @@ module.exports = {
 | Performance   | LCP 이미지에 `fetchPriority="high"` 적용 (CongratVideoPage heroBg, CampusMap 지도, IntroTab 포토부스)                                                           | LCP 개선                        |
 | Performance   | Pretendard CDN(`cdn.jsdelivr.net`)에 `<link rel="preconnect" crossorigin>` 추가                                                                                 | 렌더 블로킹 폰트 로드 지연 완화 |
 | Performance   | fold 아래 이미지에 `loading="lazy"` 적용 (TavernCard·TavernDetailView 메뉴판, CongratVideoPage about80th·발전기금, MemberCard 프로필, VideoCard YouTube 썸네일) | 초기 로드 개선                  |
-| Accessibility | `BoothCard`, `RollingPaperCategoryCard`, `RollingPaperChannelCard` 텍스트 `text-[#999]` → `text-[#737373]` (2.85:1 → 4.63:1, WCAG AA 통과)                      | 색상 대비 기준 충족             |
+| Accessibility | `BoothCard`, `RollingPaperCategoryCard`, `RollingPaperChannelCard` 텍스트 `text-[#999]` → `text-[#737373]` (흰 배경 기준 2.85:1 → 4.74:1, WCAG AA 기준 충족)                      | 색상 대비 기준 충족             |
 
 > `text-[#808080]` (3.95:1, WCAG AA 미달)은 프로젝트 전반 53개소에 사용 중. 디자이너 확인 후 별도 수정 필요.
 
 ### 2026-09-08 — Wanted Sans 가변 폰트 → 굵기별 CDN 서브셋 전환 (#5)
 
-**측정 결과 비교** (개인 fork 배포 도메인 `knu-festival-80th-client-tau.vercel.app`, `pnpm dlx lighthouse` 직접 실행, mobile 390×844 · simulate throttling)
+**측정 결과 비교** (2026-11-05 재측정, 랜딩 `/`)
 
-> 원 배포 주소(`chcse.knu.ac.kr/festival`)는 축제 종료로 서버가 내려가 있어, 동일 코드가 배포된 개인 fork 주소에서 측정했다. `lighthouserc.cjs`와 동일한 모바일 조건을 그대로 사용했다.
+- 조건: Lighthouse 12.8.2 CLI, mobile 390×844, simulate throttling, 전후를 번갈아 5회씩 실행한 중앙값
+- 전: 폰트 교체 전 배포(#4), 후: 개인 배포 도메인 `knu-festival-80th-client-tau.vercel.app`(#6과 같은 번들)
+- 원 배포 주소(`chcse.knu.ac.kr/festival`)는 축제 종료로 서버가 내려가 있어, 동일 코드가 배포된 개인 주소에서 측정했다
 
-| 페이지        | 시점 | Performance | LCP        | TTI        | 폰트 전송량         | 페이지 총 전송량      |
-| ------------- | ---- | ----------- | ---------- | ---------- | -------------------- | ---------------------- |
-| `/`           | 전   | 🟡 56       | 10.7s      | 10.8s      | 1,259.9KB             | 2,482.2KB               |
-| `/`           | 후   | 🟡 65 (+9)  | **5.6s**   | **5.7s**   | **513.9KB**           | **1,796.3KB**           |
-| `/stamptour`  | 전   | 🟡 68       | 11.0s      | 11.0s      | 1,259.9KB             | 2,414.6KB               |
-| `/stamptour`  | 후   | 🟡 68       | **6.5s**   | **6.5s**   | **262.3KB**           | **1,477.2KB**           |
-| `/instating`  | 전   | 🟡 67       | 10.7s      | 10.7s      | 1,260.1KB             | 1,995.1KB               |
-| `/instating`  | 후   | 🟡 69 (+2)  | **6.0s**   | **6.0s**   | **507.1KB**           | **1,302.5KB**           |
+| 페이지 | 시점 | LCP(simulate) | LCP 범위(5회) | Wanted Sans 전송량 | LCP 요소 |
+| ------ | ---- | ------------- | ------------- | ------------------ | -------- |
+| `/`    | 전   | 10.74s        | 10.53~10.87s  | 1,290,187B(1.29MB) | 히어로 `<h1 class="font-wanted-sans …">` |
+| `/`    | 후   | **7.73s**     | 6.54~7.78s    | **526,254B(526KB)** | 같음 |
 
-> LCP·TTI는 세 페이지 모두 거의 절반으로 줄었지만 Performance 점수 자체는 완만하게만 올랐다. Lighthouse의 Performance 채점은 로그 스케일 곡선이라, LCP가 여전히 4초 기준을 크게 웃도는 "나쁨" 구간 안에서는 절대 시간이 크게 줄어도 점수 상승폭이 작게 나온다.
->
+- 전 측정의 모든 회차에서 페이지 전송량 1위 요청이 `WantedSansVariable.woff2`(우선순위 `VeryHigh`)였다.
+- LCP 요소가 이 폰트를 쓰는 히어로 제목(`font-wanted-sans`, `font-extrabold`)이다.
+- 같은 날 제한 없이(`--throttling-method=provided`) 잰 실측 LCP는 약 0.60s → 0.57s로 차이가 거의 없다. 이 개선은 저속 회선 시뮬레이션에서의 효과다.
+- 2026-09-08 첫 측정은 1회 실행이었고 재현되지 않아 위 재측정값으로 바꿨다. `/stamptour`, `/instating`은 다시 재지 않아 표에서 뺐다.
+
 > 이 개선분은 이슈 #156(2026-05-19, prod 42점 확인 후 번들 분리·preconnect·이미지 WebP로 대응)에는 포함되지 않았던 항목이다 — 당시 문서에 없던 별개의 로컬 가변 폰트(1.29MB) 파일이 이후에 추가되어 있었다.
 
 **원인**
 
-네트워크 요청을 분석한 결과 `public/fonts/WantedSansVariable.woff2`(1.29MB, `font-weight: 100 900` 전체 가변 축, `priority: VeryHigh`)가 페이지 내 어떤 이미지보다도 커서, throttled 환경에서 이 파일 하나가 JS 번들·LCP 이미지보다 먼저 대역폭을 점유하고 있었다. 실제 코드에서 쓰는 굵기는 Regular·Medium·SemiBold·Bold·ExtraBold 5개뿐이었다.
+네트워크 요청을 분석한 결과 `public/fonts/WantedSansVariable.woff2`(1.29MB, `font-weight: 100 900` 전체 가변 축, `priority: VeryHigh`)가 페이지 내 어떤 이미지보다도 커서, throttled 환경에서 이 파일 하나가 JS 번들과 다른 리소스보다 먼저 대역폭을 점유하고 있었다. 랜딩의 LCP 요소인 히어로 제목도 이 폰트를 쓴다. 실제 코드에서 쓰는 굵기는 Regular·Medium·SemiBold·Bold·ExtraBold 5개뿐이었다.
 
 **적용 내용**
 
 | 분류        | 변경 내용                                                                                             | 효과                                    |
 | ----------- | ------------------------------------------------------------------------------------------------------ | ---------------------------------------- |
-| Performance | 로컬 가변 폰트(1.29MB) 제거, wanted-sans 공식 CDN(jsdelivr, 굵기별·유니코드 범위별 분할 서브셋)로 교체 | 폰트 전송량 페이지당 60~80% 감소         |
+| Performance | 로컬 가변 폰트(1.29MB) 제거, wanted-sans 공식 CDN(jsdelivr, 굵기별·유니코드 범위별 분할 서브셋)로 교체 | 랜딩 폰트 전송량 1.29MB → 526KB(약 59% 감소) |
 | Performance | Pretendard와 동일 호스트(`cdn.jsdelivr.net`) 사용으로 기존 `preconnect` 재사용                         | 추가 DNS·TCP·TLS 연결 비용 없음          |
 
 **남은 병목**
