@@ -146,6 +146,8 @@ module.exports = {
 - `render-blocking-insight`가 새로 추가된 굵기별 CSS 5개(각 150ms) + Pretendard CSS(775ms)를 렌더 블로킹으로 지목. 다만 `metricSavings`가 `{ FCP: 950, LCP: 0 }`으로 명시되어 있어 LCP에는 영향이 없고, 병렬 요청 특성상 실제 절감은 표시된 합산치보다 작을 것으로 판단해 별도 조치는 보류.
 - 홈(`/`) 상단 `step_1`~`step_3` 일러스트 3장이 각각 91~198KB로 여전히 큼. `ProcessCard`에 `loading="lazy"`는 이미 적용되어 있어(뷰포트 밖으로 미룸) 초기 로드를 막지는 않으며, 남은 여지는 WebP 압축률 자체를 더 낮추는 것뿐.
 
+> 2026-11-09에 이 방식과 자체 호스팅 서브셋, preload를 사후에 비교한 기록은 [`FONT_DELIVERY_COMPARE.md`](./FONT_DELIVERY_COMPARE.md)에 있다. #6 당시 비교한 것이 아니다.
+
 ## 주의사항
 
 - `lighthouserc.cjs` — `package.json`에 `"type": "module"` 설정이 있어 `.js` 확장자는 ESM으로 해석됩니다. CommonJS 문법(`module.exports`)을 사용하기 위해 `.cjs` 확장자를 사용합니다.
